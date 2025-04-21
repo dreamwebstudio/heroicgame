@@ -2779,11 +2779,11 @@
                     <span class="score-date">${score.date}</span>
                 `;
                 
-                // Animate the score entry
-                TweenMax.from(scoreElement, 0.5, {
+                // Animate the score entry with a smoother animation
+                TweenMax.from(scoreElement, 0.8, {
                     opacity: 0,
                     y: 50,
-                    ease: Back.easeOut
+                    ease: Power2.easeOut
                 });
                 
                 highScores.push(score);
@@ -2792,17 +2792,25 @@
                 localStorage.setItem('databreachDefenderHighScores', JSON.stringify(highScores));
                 updateLeaderboardDisplay();
                 
-                // Return to menu with animation
-                document.querySelector('.game-over-screen').classList.remove('show');
-                document.querySelector('.game-over-content').classList.remove('show');
-                setTimeout(() => {
-                    document.querySelector('.game-over-screen').style.display = 'none';
-                    document.querySelector('.menu-screen').style.display = 'flex';
-                    // Refresh the page after a short delay
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
-                }, 500);
+                // Smooth transition back to menu
+                TweenMax.to('.game-over-screen', 0.5, {
+                    opacity: 0,
+                    ease: Power2.easeOut,
+                    onComplete: function() {
+                        document.querySelector('.game-over-screen').style.display = 'none';
+                        document.querySelector('.menu-screen').style.display = 'flex';
+                        
+                        // Fade in the menu screen
+                        TweenMax.from('.menu-screen', 0.5, {
+                            opacity: 0,
+                            ease: Power2.easeIn,
+                            onComplete: function() {
+                                // Refresh after menu is visible
+                                window.location.reload();
+                            }
+                        });
+                    }
+                });
             }
         }
 
@@ -3898,9 +3906,9 @@
                 input.addEventListener('change', updateGnatSpeeds);
                 input.addEventListener('input', updateGnatSpeeds);
                 
-                // Handle on-screen keyboard input
-                input.addEventListener('focus', function() {
-                    showKeyboard();
+                // Prevent the on-screen keyboard from showing up
+                input.addEventListener('focus', function(e) {
+                    e.preventDefault();
                     // Store the currently focused input
                     currentInput = this;
                 });
@@ -4156,7 +4164,239 @@
         // Add to the DOMContentLoaded event listener
         document.getElementById('max-gnats').addEventListener('change', function() {
             maxGnats = parseInt(this.value) || 15;
+            saveSettings();
             showNotification('Max gnats updated!', 'rgba(77, 153, 211, 0.9)');
+        });
+
+        // ... existing code ...
+        // Add settings storage functions
+        function saveSettings() {
+            const settings = {
+                debugMode: debugMode,
+                showMouseHitbox: showMouseHitbox,
+                showPerformanceMonitor: showPerformanceMonitor,
+                showHitboxes: showHitboxes,
+                showTempGameOverButton: showTempGameOverButton,
+                showSurvivalMode: showSurvivalMode,
+                gnatSpeeds: gnatSpeeds,
+                maxGnats: maxGnats
+            };
+            localStorage.setItem('databreachDefenderSettings', JSON.stringify(settings));
+        }
+
+        function loadSettings() {
+            const savedSettings = localStorage.getItem('databreachDefenderSettings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                debugMode = settings.debugMode;
+                showMouseHitbox = settings.showMouseHitbox;
+                showPerformanceMonitor = settings.showPerformanceMonitor;
+                showHitboxes = settings.showHitboxes;
+                showTempGameOverButton = settings.showTempGameOverButton;
+                showSurvivalMode = settings.showSurvivalMode;
+                gnatSpeeds = settings.gnatSpeeds;
+                maxGnats = settings.maxGnats || 15; // Default to 15 if not set
+
+                // Update UI to reflect loaded settings
+                updateDebugToggleState();
+                updateMouseHitboxToggleState();
+                updatePerformanceMonitorState();
+                updateHitboxVisualizationState();
+                updateTempGameOverButtonState();
+                updateSurvivalModeState();
+                initializeSpeedSettings();
+                
+                // Update max gnats input value
+                document.getElementById('max-gnats').value = maxGnats;
+            }
+        }
+
+        // Modify toggle functions to save settings
+        function toggleDebugMode() {
+            debugMode = !debugMode;
+            updateDebugToggleState();
+            saveSettings();
+            
+            // Show notification
+            showNotification(debugMode ? 'Debug Mode: ON' : 'Debug Mode: OFF', 
+                            debugMode ? 'rgba(77, 153, 211, 0.9)' : 'rgba(255, 255, 255, 0.9)');
+            
+            if (debugMode) {
+                requestAnimationFrame(updateGnatHighlights);
+            } else {
+                removeGnatHighlights();
+            }
+        }
+
+        function toggleMouseHitbox() {
+            showMouseHitbox = !showMouseHitbox;
+            updateMouseHitboxToggleState();
+            saveSettings();
+            
+            if (showMouseHitbox) {
+                createMouseHitbox();
+                showNotification('Mouse Hitbox: ON', 'rgba(77, 153, 211, 0.9)');
+            } else {
+                removeMouseHitbox();
+                showNotification('Mouse Hitbox: OFF', 'rgba(255, 255, 255, 0.9)');
+            }
+        }
+
+        function togglePerformanceMonitor() {
+            showPerformanceMonitor = !showPerformanceMonitor;
+            updatePerformanceMonitorState();
+            saveSettings();
+            
+            const debugPanel = document.querySelector('.debug-info-panel');
+            const toggles = document.querySelectorAll('.settings-toggle');
+            const perfToggle = toggles[2];
+            
+            if (showPerformanceMonitor) {
+                debugPanel.style.display = 'block';
+                debugPanel.style.zIndex = '9999';
+                perfToggle.classList.add('active');
+                lastFrameTime = performance.now();
+                requestAnimationFrame(updatePerformanceStats);
+                showNotification('Performance Monitor: ON', 'rgba(77, 153, 211, 0.9)');
+            } else {
+                debugPanel.style.display = 'none';
+                perfToggle.classList.remove('active');
+                showNotification('Performance Monitor: OFF', 'rgba(255, 255, 255, 0.9)');
+            }
+        }
+
+        function toggleHitboxVisualization() {
+            showHitboxes = !showHitboxes;
+            updateHitboxVisualizationState();
+            saveSettings();
+            
+            const toggles = document.querySelectorAll('.settings-toggle');
+            const hitboxToggle = toggles[3];
+            
+            if (showHitboxes) {
+                hitboxToggle.classList.add('active');
+                document.querySelectorAll('.gnat').forEach(gnat => {
+                    const hitbox = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    hitbox.setAttribute("class", "hitbox-visualization");
+                    hitbox.setAttribute("r", gnatHitRadius);
+                    hitbox.setAttribute("fill", "rgba(255, 0, 0, 0.1)");
+                    hitbox.setAttribute("stroke", "rgba(255, 0, 0, 0.5)");
+                    hitbox.setAttribute("stroke-width", "2");
+                    hitbox.setAttribute("cx", "0");
+                    hitbox.setAttribute("cy", "0");
+                    hitbox.style.display = "block";
+                    gnat.appendChild(hitbox);
+                });
+                showNotification('Hitbox Visualization: ON', 'rgba(77, 153, 211, 0.9)');
+            } else {
+                hitboxToggle.classList.remove('active');
+                document.querySelectorAll('.hitbox-visualization').forEach(el => el.remove());
+                showNotification('Hitbox Visualization: OFF', 'rgba(255, 255, 255, 0.9)');
+            }
+        }
+
+        function toggleTempGameOverButton() {
+            showTempGameOverButton = !showTempGameOverButton;
+            updateTempGameOverButtonState();
+            saveSettings();
+            
+            const toggles = document.querySelectorAll('.settings-toggle');
+            const tempGameOverToggle = toggles[4];
+            
+            if (showTempGameOverButton) {
+                tempGameOverToggle.classList.add('active');
+                document.querySelector('.temp-game-over-btn').style.display = 'block';
+                showNotification('Temp Game Over Button: ON', 'rgba(77, 153, 211, 0.9)');
+            } else {
+                tempGameOverToggle.classList.remove('active');
+                document.querySelector('.temp-game-over-btn').style.display = 'none';
+                showNotification('Temp Game Over Button: OFF', 'rgba(255, 255, 255, 0.9)');
+            }
+        }
+
+        function toggleSurvivalMode() {
+            showSurvivalMode = !showSurvivalMode;
+            updateSurvivalModeState();
+            saveSettings();
+            
+            const toggles = document.querySelectorAll('.settings-toggle');
+            const survivalToggle = toggles[5];
+            
+            if (showSurvivalMode) {
+                survivalToggle.classList.add('active');
+                document.querySelector('.mode-button[onclick="startGame(\'survival\')"]').style.display = 'block';
+                showNotification('Survival Mode: ON', 'rgba(77, 153, 211, 0.9)');
+            } else {
+                survivalToggle.classList.remove('active');
+                document.querySelector('.mode-button[onclick="startGame(\'survival\')"]').style.display = 'none';
+                showNotification('Survival Mode: OFF', 'rgba(255, 255, 255, 0.9)');
+            }
+        }
+
+        function updateGnatSpeeds() {
+            const shieldSpeed = parseFloat(document.getElementById('shield-speed').value) || 10;
+            const passwordSpeed = parseFloat(document.getElementById('password-speed').value) || 7;
+            const folderSpeed = parseFloat(document.getElementById('folder-speed').value) || 10;
+            const bankingSpeed = parseFloat(document.getElementById('banking-speed').value) || 7;
+
+            gnatSpeeds['.shield-icon'] = shieldSpeed;
+            gnatSpeeds['.password-icon'] = passwordSpeed;
+            gnatSpeeds['.folder-icon'] = folderSpeed;
+            gnatSpeeds['.banking-information'] = bankingSpeed;
+            
+            saveSettings();
+            showNotification('Gnat speeds updated!', 'rgba(77, 153, 211, 0.9)');
+        }
+
+        // Add state update functions
+        function updatePerformanceMonitorState() {
+            const toggles = document.querySelectorAll('.settings-toggle');
+            const perfToggle = toggles[2];
+            if (showPerformanceMonitor) {
+                perfToggle.classList.add('active');
+            } else {
+                perfToggle.classList.remove('active');
+            }
+        }
+
+        function updateHitboxVisualizationState() {
+            const toggles = document.querySelectorAll('.settings-toggle');
+            const hitboxToggle = toggles[3];
+            if (showHitboxes) {
+                hitboxToggle.classList.add('active');
+            } else {
+                hitboxToggle.classList.remove('active');
+            }
+        }
+
+        function updateTempGameOverButtonState() {
+            const toggles = document.querySelectorAll('.settings-toggle');
+            const tempGameOverToggle = toggles[4];
+            if (showTempGameOverButton) {
+                tempGameOverToggle.classList.add('active');
+                document.querySelector('.temp-game-over-btn').style.display = 'block';
+            } else {
+                tempGameOverToggle.classList.remove('active');
+                document.querySelector('.temp-game-over-btn').style.display = 'none';
+            }
+        }
+
+        function updateSurvivalModeState() {
+            const toggles = document.querySelectorAll('.settings-toggle');
+            const survivalToggle = toggles[5];
+            if (showSurvivalMode) {
+                survivalToggle.classList.add('active');
+                document.querySelector('.mode-button[onclick="startGame(\'survival\')"]').style.display = 'block';
+            } else {
+                survivalToggle.classList.remove('active');
+                document.querySelector('.mode-button[onclick="startGame(\'survival\')"]').style.display = 'none';
+            }
+        }
+
+        // Load settings when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSettings();
+            // ... rest of the existing DOMContentLoaded code ...
         });
     </script>
     <audio autoplay preload loop>
