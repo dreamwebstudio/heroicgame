@@ -2010,7 +2010,7 @@
                 <span class="settings-option-label">Max Gnats on Screen</span>
                 <div class="speed-inputs-item">
                     <div class="speed-input-group">
-                        <input type="number" id="max-gnats" class="speed-input" min="5" max="30" value="15" step="1">
+                        <input type="number" id="max-gnats" class="speed-input" min="5" max="30" value="30" step="1">
                     </div>
                 </div>
             </div>
@@ -4510,11 +4510,11 @@
         document.querySelector('.mode-button[onclick="startGame(\'survival\')"]').style.display = 'none';
 
         // Add to the JavaScript section
-        let maxGnats = 15; // Default value
+        let maxGnats = 30; // Default value
 
         // Add to the DOMContentLoaded event listener
         document.getElementById('max-gnats').addEventListener('change', function() {
-            maxGnats = parseInt(this.value) || 15;
+            maxGnats = parseInt(this.value) || 30;
             saveSettings();
             showNotification('Max gnats updated!', 'rgba(77, 153, 211, 0.9)');
         });
@@ -4546,7 +4546,7 @@
                 showTempGameOverButton = settings.showTempGameOverButton;
                 showSurvivalMode = settings.showSurvivalMode;
                 gnatSpeeds = settings.gnatSpeeds;
-                maxGnats = settings.maxGnats || 15; // Default to 15 if not set
+                maxGnats = settings.maxGnats || 30; // Default to 30 if not set
 
                 // Update UI to reflect loaded settings
                 updateDebugToggleState();
