@@ -2024,19 +2024,19 @@
                 <div class="speed-inputs">
                     <div class="speed-input-group">
                         <label>Shield:</label>
-                        <input type="number" id="shield-speed" class="speed-input" min="1" max="20" value="10" step="0.5">
+                        <input type="number" id="shield-speed" class="speed-input" min="1" max="20" value="15" step="0.5">
                     </div>
                     <div class="speed-input-group">
                         <label>Password:</label>
-                        <input type="number" id="password-speed" class="speed-input" min="1" max="20" value="7" step="0.5">
+                        <input type="number" id="password-speed" class="speed-input" min="1" max="20" value="12" step="0.5">
                     </div>
                     <div class="speed-input-group">
                         <label>Folder:</label>
-                        <input type="number" id="folder-speed" class="speed-input" min="1" max="20" value="10" step="0.5">
+                        <input type="number" id="folder-speed" class="speed-input" min="1" max="20" value="15" step="0.5">
                     </div>
                     <div class="speed-input-group">
                         <label>Banking:</label>
-                        <input type="number" id="banking-speed" class="speed-input" min="1" max="20" value="7" step="0.5">
+                        <input type="number" id="banking-speed" class="speed-input" min="1" max="20" value="12" step="0.5">
                     </div>
                 </div>
             </div>
@@ -4138,10 +4138,10 @@
 
         // Add speed settings variables
         let gnatSpeeds = {
-            '.shield-icon': 10,
-            '.password-icon': 7,
-            '.folder-icon': 10,
-            '.banking-information': 7
+            '.shield-icon': 15,
+            '.password-icon': 12,
+            '.folder-icon': 15,
+            '.banking-information': 12
         };
 
         // Function to initialize speed settings
@@ -4208,17 +4208,17 @@
 
         // Function to update gnat speeds
         function updateGnatSpeeds() {
-            const shieldSpeed = parseFloat(document.getElementById('shield-speed').value) || 10;
-            const passwordSpeed = parseFloat(document.getElementById('password-speed').value) || 7;
-            const folderSpeed = parseFloat(document.getElementById('folder-speed').value) || 10;
-            const bankingSpeed = parseFloat(document.getElementById('banking-speed').value) || 7;
+            const shieldSpeed = parseFloat(document.getElementById('shield-speed').value) || 15;
+            const passwordSpeed = parseFloat(document.getElementById('password-speed').value) || 12;
+            const folderSpeed = parseFloat(document.getElementById('folder-speed').value) || 15;
+            const bankingSpeed = parseFloat(document.getElementById('banking-speed').value) || 12;
 
             gnatSpeeds['.shield-icon'] = shieldSpeed;
             gnatSpeeds['.password-icon'] = passwordSpeed;
             gnatSpeeds['.folder-icon'] = folderSpeed;
             gnatSpeeds['.banking-information'] = bankingSpeed;
             
-            console.log('Updated speeds:', gnatSpeeds); // Debug log
+            saveSettings();
             showNotification('Gnat speeds updated!', 'rgba(77, 153, 211, 0.9)');
         }
 
