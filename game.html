@@ -271,55 +271,43 @@
 
         }
 
-        .animated-container {
-            animation: fivesecondanimation 30s ease-in-out infinite;
+        .ending-animation {
+            animation: fivesecondanimation 5s ease-in-out infinite;
             outline-offset: -5px;
         }
 
         @keyframes fivesecondanimation {
-            84% {
-              outline: 5px solid rgba(255, 0, 0, 0); 
+            0% {
+                outline: 1px solid red;
             }
-            /*start of first cycle*/
-            85% {
-                outline: 1px solid red;}
-           
-            87% {
-                outline: 5px solid rgba(255, 0, 0, 0);}
-            /*start of second cycle*/
-            88% {
-                outline: 1px solid red;}
-            90% {
-                outline: 5px solid rgba(255, 0, 0, 0); }
-            /*start of third cycle*/
-            91% {
-                outline: 1px solid red;}
-            
-            93% {
-                outline: 5px solid rgba(255, 0, 0, 0); }
-            /*start of fourth cycle*/
-            94% {
-                outline: 1px solid red; }
-            96% {
-                outline: 5px solid rgba(255, 0, 0, 0); }
 
-            /*start of fifth cycle*/
-            97% {
-                outline: 1px solid red; 
+            20% {
+                outline: 5px solid rgba(255, 0, 0, 0); 
             }
-            99% {
-                outline: 5px solid rgba(255, 0, 0, 0); }
+
+            40% {
+                outline: 1px solid red;
+            }
+
+            60% {
+                outline: 5px solid rgba(255, 0, 0, 0); 
+            }
+
+            80% {
+                outline: 1px solid red;
+            }
 
             100% {
-                outline: 1px solid red; 
-            }
+                outline: 1px solid red;
+            }  
+
         }
 
 
 
         .counter {
             width: 100px;
-            height 100px;
+            height: 100px;
             top: 10px;
             right: calc(50% - 80px);
             position: fixed;
@@ -1729,6 +1717,14 @@
                     </div>
                 </div>
             </div>
+            <div class="settings-option">
+                <span class="settings-option-label">Max Gnats on Screen</span>
+                <div class="speed-inputs">
+                    <div class="speed-input-group">
+                        <input type="number" id="max-gnats" class="speed-input" min="5" max="30" value="15" step="1">
+                    </div>
+                </div>
+            </div>
             <button class="settings-button" onclick="clearLeaderboard()">Clear Leaderboard</button>
             
         </div>
@@ -2344,8 +2340,17 @@
         }
 
         function createGnats(numGnats) {
+            // Don't create new gnats if we're at the limit
+            if (gnats.length >= maxGnats) {
+                return;
+            }
+            
+            // Limit the number of new gnats to not exceed maxGnats
+            const availableSlots = maxGnats - gnats.length;
+            const gnatsToCreate = Math.min(numGnats, availableSlots);
+            
             // Create each gnat with its own random path
-            for (var i = 0; i < numGnats; i++) {
+            for (var i = 0; i < gnatsToCreate; i++) {
                 var path = getPath(); // Get a unique random path for each gnat
                 var gnat = document.createElementNS("http://www.w3.org/2000/svg", "g");
                 gnat.setAttribute("class", "gnat");
@@ -2641,9 +2646,12 @@
                         if (timeLeft <= 5) {
                             document.querySelector('.timer-circle-progress').style.stroke = '#ff4444';
                             document.querySelector('.timer-text').style.color = '#ff4444';
+                            document.querySelector('.game.animated-container').classList.add('ending-animation');
                         }
                 
                 if (timeLeft <= 0) {
+                    document.querySelector('.game.animated-container').classList.remove('ending-animation');
+                    clearInterval(gameTimer);
                     endGame();
                 }
             }, 1000);
@@ -2790,6 +2798,10 @@
                 setTimeout(() => {
                     document.querySelector('.game-over-screen').style.display = 'none';
                     document.querySelector('.menu-screen').style.display = 'flex';
+                    // Refresh the page after a short delay
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
                 }, 500);
             }
         }
@@ -2810,10 +2822,14 @@
                 // Reset menu content position
                 document.querySelector('.menu-content').classList.remove('show');
                 
-                // Show menu content with animation
+                // Show menu content with animation and refresh
                 setTimeout(() => {
                     document.querySelector('.menu-content').classList.add('show');
                     document.querySelector('.menu-screen .facts-container').classList.add('show');
+                    // Refresh the page after a short delay
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
                 }, 100);
             }, 500);
         }
@@ -3652,9 +3668,12 @@
                         if (timeLeft <= 5) {
                             document.querySelector('.timer-circle-progress').style.stroke = '#ff4444';
                             document.querySelector('.timer-text').style.color = '#ff4444';
+                            document.querySelector('.game.animated-container').classList.add('ending-animation');
                         }
                         
                         if (timeLeft <= 0) {
+                            document.querySelector('.game.animated-container').classList.remove('ending-animation');
+                            clearInterval(gameTimer);
                             endGame();
                         }
                     }, 1000);
@@ -4130,6 +4149,15 @@
 
         // Set initial visibility of survival mode button to hidden
         document.querySelector('.mode-button[onclick="startGame(\'survival\')"]').style.display = 'none';
+
+        // Add to the JavaScript section
+        let maxGnats = 15; // Default value
+
+        // Add to the DOMContentLoaded event listener
+        document.getElementById('max-gnats').addEventListener('change', function() {
+            maxGnats = parseInt(this.value) || 15;
+            showNotification('Max gnats updated!', 'rgba(77, 153, 211, 0.9)');
+        });
     </script>
     <audio autoplay preload loop>
         <source src="assets/sfx/music.mp3" type="audio/mpeg">
