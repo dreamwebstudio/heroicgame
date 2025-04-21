@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    <!-- Add Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Databreach Defender</title>
@@ -579,23 +578,23 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         .name-input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 2px solid rgba(77, 153, 211, 0.3);
+            width: 95%;
+            padding: 13px 10px;
+            margin: 4px 0;
+            border: 2px solid rgba(153, 153, 153, 0.404);
             border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(216, 216, 216, 0.158);
             color: rgb(0, 0, 0);
             font-family: 'Poppins', sans-serif;
             font-size: 16px;
-            text-align: center;
+            text-align: left;
             transition: all 0.3s ease;
         }
         
         .name-input:focus {
             outline: none;
             border-color: #4D99D3;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(153, 153, 153, 0.15);
         }
         
         /* Onscreen Keyboard Styles */
@@ -734,7 +733,7 @@
         
         .settings-icon:hover {
             background-color: rgba(255, 255, 255, 0.3);
-            transform: rotate(30deg);
+            transform: rotate(30deg) !important;
         }
         
         .settings-icon svg {
@@ -894,6 +893,10 @@
             transition: background-color 0.3s ease;
         }
 
+        .instruction-slide-point {
+            color: black;
+        }
+
         /* Speed Control Styles */
         .speed-control {
             display: flex;
@@ -901,10 +904,16 @@
             gap: 10px;
         }
 
+        .speed-control .settings-option-label {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+
         .speed-presets {
             display: flex;
             gap: 10px;
             margin-bottom: 10px;
+            width: 100%;
         }
 
         .speed-preset-btn {
@@ -915,6 +924,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.2s ease;
+            width: 100%;
         }
 
         .speed-preset-btn:hover {
@@ -944,7 +954,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 0px;
         }
 
         .speed-input-group label {
@@ -1011,10 +1021,10 @@
             opacity: 1;
         }
         .menu-logo {
-            width: 240px;
+            width: 300px;
             height: auto;
             margin-bottom: 20px;
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.014));
         }
         
         /* Debug mode toggle styles */
@@ -1191,7 +1201,7 @@
             font-size: 0.8em;
         }
         .game-over-title {
-            font-size: 40px;
+            font-size: 60px;
             margin-bottom: 0px;
             margin-top: 10px;
             color: #1a237e;
@@ -1345,11 +1355,11 @@
             }
         }
         .instruction-content {
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0);
             border-radius: 20px;
             padding: 2rem;
             width: 90%;
-            max-width: 500px;
+            max-width: 900px;
             text-align: center;
             transform: translateY(50px);
             opacity: 0;
@@ -1585,6 +1595,311 @@
         .combo-indicator.active {
             animation: comboPulse 0.3s ease;
         } */
+
+        /* Add Swiper Custom Styles */
+        .instruction-slider {
+            width: 100%;
+            margin-bottom: 20px;
+
+        }
+
+        .swiper {
+            width: 100%;
+            height: 450px;
+            background: rgb(255, 255, 255);
+            border-radius: 10px;
+            border: 1px solid #08080800;
+            box-shadow: 0 0 20px rgba(172, 172, 172, 0.2);
+            overflow: hidden;
+        }
+
+        .swiper-wrapper {
+            align-items: center;
+        }
+
+        .swiper-slide {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            height: auto;
+            box-sizing: border-box;
+        }
+
+        .slide-content {
+            text-align: center;
+            color: p#fff;
+            padding: 20px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .instruction-icon {
+            margin: 20px 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .points-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .point-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: rgb(168 168 168 / 10%);
+            border-radius: 10px;
+            border: 1px solid rgb(209 209 209 / 30%);
+        }
+
+        .point-item svg {
+            filter: drop-shadow(0 0 5px rgba(0, 255, 0, 0.5));
+        }
+
+        .point-item span {
+            color: #000000;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .slide-content h3 {
+            color: #000000;
+            font-size: 30px;
+            margin-bottom: 15px;
+            font-weight: 100;
+            text-transform: uppercase;
+            font-family: 'Russo One', sans-serif;
+            width: 100%;
+            text-align: center;
+        }
+
+        .point-icon {
+            max-width: 60px;
+        }
+
+        .slide-content p {
+            font-size: 20px;
+            line-height: 1.6;
+            margin: 0;
+            text-align: center;
+            width: 100%;
+            color: #000000 !important;
+        }
+
+        /* Mobile Responsive Adjustments */
+        @media (max-width: 768px) {
+            .points-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .point-item {
+                padding: 10px;
+            }
+
+            .point-item span {
+                font-size: 16px;
+            }
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: #1d1d1d !important;
+            width: 60px !important;
+            height: 60px !important;
+            background-color: #f0f0f0;
+            box-shadow: 0 0 10px rgba(172, 172, 172, 0.2);
+            border-radius: 100%;
+        }
+
+        .swiper-button-next:after,
+        .swiper-button-prev:after {
+            font-size: 20px !important;
+        }
+
+
+        .swiper-pagination {
+            bottom: 10px !important;
+        }
+
+        .swiper-pagination-bullet {
+            background: #3a3a3a !important;
+            opacity: 0.5;
+            width: 8px;
+            height: 8px;
+        }
+
+        .swiper-pagination-bullet-active {
+            opacity: 1;
+        }
+
+        /* Mobile Responsive Adjustments */
+        @media (max-width: 768px) {
+            .instruction-slider {
+            }
+
+            .swiper {
+                height: 250px;
+            }
+
+            .slide-content {
+                padding: 15px;
+            }
+
+            .slide-content h3 {
+                font-size: 20px;
+            }
+
+            .slide-content p {
+                font-size: 14px;
+            }
+
+            .swiper-button-next,
+            .swiper-button-prev {
+                width: 40px !important;
+                height: 40px !important;
+            }
+        }
+
+        /* Add these styles to your existing CSS */
+        .email-notice {
+            background: linear-gradient(135deg, rgba(77, 153, 211, 0.1), rgba(26, 35, 126, 0.1));
+            border: 1px solid rgba(77, 153, 211, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .email-notice::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                rgba(77, 153, 211, 0.1) 0%, 
+                rgba(77, 153, 211, 0) 50%, 
+                rgba(77, 153, 211, 0.1) 100%);
+            animation: shimmer 2s infinite;
+        }
+
+        .notice-icon {
+            font-size: 24px;
+            background: rgba(77, 153, 211, 0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notice-content {
+            flex-grow: 1;
+            justify-content: left;
+        }
+
+        .notice-content h3 {
+            color: #4D99D3;
+            margin: 0 0 5px 0;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .notice-content p {
+            margin: 0;
+            font-size: 14px;
+            color: rgb(0 0 0 / 80%);
+            line-height: 1.4;
+            text-align: left;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Add these styles to your existing CSS */
+        .input-with-icon {
+            position: relative;
+            width: 95%;
+            margin: 4px 0;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+        }
+
+        .input-with-icon .name-input {
+            padding-left: 35px;
+        }
+
+        /* Add these styles to your existing CSS */
+        .input-group {
+            width: 95%;
+            margin: 8px 0;
+        }
+
+        .input-group label {
+            display: block;
+            color: #4D99D3;
+            font-size: 14px;
+            margin-bottom: 4px;
+            font-weight: 500;
+            text-align: left;
+        }
+
+        .input-with-icon {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+        }
+
+        .input-with-icon .name-input {
+            padding-left: 35px;
+        }
     </style>
 </head>
 <body>
@@ -1653,7 +1968,7 @@
             <h1 class="title">Databreach<br> Defender</h1>
             <div class="game-modes">
                 <div>
-                    <button class="mode-button" onclick="startGame('attack')">Breach Buster</button>
+                    <button class="mode-button" onclick="startGame('attack')">Start The Game</button>
                 </div>
                 <div>
                     <button class="mode-button" onclick="startGame('survival')">Dodge & Survive</button>
@@ -1691,10 +2006,18 @@
                 <span class="settings-option-label">Show Survival Mode</span>
                 <div class="settings-toggle"></div>
             </div>
+            <div class="settings-option">
+                <span class="settings-option-label">Max Gnats on Screen</span>
+                <div class="speed-inputs-item">
+                    <div class="speed-input-group">
+                        <input type="number" id="max-gnats" class="speed-input" min="5" max="30" value="15" step="1">
+                    </div>
+                </div>
+            </div>
             <div class="settings-option speed-control">
                 <span class="settings-option-label">Gnat Speeds (seconds)</span>
                 <div class="speed-presets">
-                    <button class="speed-preset-btn" onclick="setSpeedPreset(1)">Easy</button>
+                    <button class="speed-preset-btn active" onclick="setSpeedPreset(1)">Easy</button>
                     <button class="speed-preset-btn" onclick="setSpeedPreset(2)">Medium</button>
                     <button class="speed-preset-btn" onclick="setSpeedPreset(3)">Hard</button>
                 </div>
@@ -1717,15 +2040,12 @@
                     </div>
                 </div>
             </div>
-            <div class="settings-option">
-                <span class="settings-option-label">Max Gnats on Screen</span>
-                <div class="speed-inputs">
-                    <div class="speed-input-group">
-                        <input type="number" id="max-gnats" class="speed-input" min="5" max="30" value="15" step="1">
-                    </div>
-                </div>
+
+            <div class="settings-section">
+                <h3>Leaderboard</h3>
+                <button class="settings-button" onclick="clearLeaderboard()">Clear Leaderboard</button>
+                <button class="settings-button" onclick="viewAllSubmissions()">View All Submissions</button>
             </div>
-            <button class="settings-button" onclick="clearLeaderboard()">Clear Leaderboard</button>
             
         </div>
 
@@ -1753,7 +2073,55 @@
             <div class="instruction-text">
                 <p class="welcome-text">WELCOME TO</p>
                 <p class="fancy-text">The Dark Web.</p>
-                <p class="instruction-text" id="mode-instruction">Your job is to catch as many breaches as you can before the timer runs out. Can you get the high score?</p>
+                <p class="instruction-text" id="mode-instruction"></p>
+                
+            </div>
+            <div class="instruction-slider">
+                <div class="swiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="slide-content">
+                                <img src="assets/images/timer.gif" style="width: 80px; margin-bottom: -15px;" alt="General icon">
+                                <h3>Catch as many breaches <br>before time runs out</h3>
+                                <p>Breaches will show up on the screen, quickly tap on them <br> to "catch" them and get a higher score.</p>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="slide-content">
+                                <img src="assets/images/task-list.gif" style="width: 80px; margin-bottom: -15px;" alt="General icon">
+                                <h3>The more severe a breach is, <br> the more points you get.</h3>
+                                <div class="points-grid">
+                                    <div class="point-item">
+                                        <img src="assets/images/Email.png" class="point-icon" alt="Email icon"> 
+                                        <span>Emails </span>
+                                    </div>
+                                    <div class="point-item">
+                                        <img src="assets/images/General.png" class="point-icon" alt="General icon">
+                                        <span>General</span>
+                                    </div>
+                                    <div class="point-item">
+                                        <img src="assets/images/Password.png" class="point-icon" alt="Password icon">
+                                        <span>Passwords</span>
+                                    </div>
+                                    <div class="point-item">
+                                        <img src="assets/images/Banking.png" class="point-icon" alt="Banking icon">
+                                        <span>Financial</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="slide-content">
+                                <img src="assets/images/trophy.gif" style="width: 80px; margin-bottom: -15px;" alt="General icon">
+                                <h3>Compete for the highest score to <br> earn a prize at the end of RSA</h3>
+                                <p>Winners at the end of RSA will receive a cash prize. <br>Make sure to submit your email with your score so we can send you your prize!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
             </div>
             <button class="button" onclick="startGameForReal()">Let's Go!</button>
         </div>
@@ -1764,7 +2132,27 @@
             <h1 class="game-over-title">Game Over</h1>
             <div class="final-score">Your Score: <span id="final-score">0</span></div>
             <div class="high-score-display">Score: <span id="high-score">0</span></div>
-            <input type="text" class="name-input" placeholder="Enter your name" maxlength="10">
+            <div class="email-notice">
+                <div class="notice-icon">📧</div>
+                <div class="notice-content">
+                    <h3>Submit your High score for a prize!</h3>
+                    <p>Please provide your email to submit your score and be eligible for prizes!</p>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="player-name">Leaderboard Name</label>
+                <div class="input-with-icon">
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="player-name" class="name-input" placeholder="John Doe" maxlength="10">
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="player-email">Email Address</label>
+                <div class="input-with-icon">
+                    <span class="input-icon">📧</span>
+                    <input type="email" id="player-email" class="name-input" placeholder="deeznuts@gmail.com" required>
+                </div>
+            </div>
             <div class="game-over-buttons">
                 <button class="submit-score" onclick="submitScore()">Submit Score</button>
                 <div class="skip-score" onclick="returnToMenu()">Skip</div>
@@ -2548,9 +2936,9 @@
             // Update instruction text based on mode
             const instructionText = document.getElementById('mode-instruction');
             if (mode === 'attack') {
-                instructionText.textContent = 'Your job is to catch as many breaches as you can before the timer runs out. Can you get the high score?';
+                instructionText.textContent = '';
             } else {
-                instructionText.textContent = 'Dodge the incoming threats and survive! Each hit reduces your health by 25%. Stay alive as long as you can!';
+                instructionText.textContent = '';
             }
             
             // Animate instruction screen
@@ -2762,10 +3150,20 @@
         }
 
         function submitScore() {
-            var name = document.querySelector('.name-input').value.trim();
-            if (name) {
+            var name = document.querySelector('.name-input[type="text"]').value.trim();
+            var email = document.querySelector('.name-input[type="email"]').value.trim();
+            
+            if (name && email) {
+                // Validate email format
+                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    alert('Please enter a valid email address');
+                    return;
+                }
+
                 var score = {
                     name: name,
+                    email: email,
                     score: swatCount,
                     date: new Date().toLocaleDateString()
                 };
@@ -2779,38 +3177,37 @@
                     <span class="score-date">${score.date}</span>
                 `;
                 
-                // Animate the score entry with a smoother animation
-                TweenMax.from(scoreElement, 0.8, {
+                // Animate the score entry
+                TweenMax.from(scoreElement, 0.5, {
                     opacity: 0,
                     y: 50,
-                    ease: Power2.easeOut
+                    ease: Back.easeOut
                 });
                 
+                // Save to localStorage
                 highScores.push(score);
                 highScores.sort((a, b) => b.score - a.score);
                 highScores = highScores.slice(0, 10);
                 localStorage.setItem('databreachDefenderHighScores', JSON.stringify(highScores));
+                
+                // Save to a separate list for all submissions
+                var allSubmissions = JSON.parse(localStorage.getItem('databreachDefenderSubmissions') || '[]');
+                allSubmissions.push(score);
+                localStorage.setItem('databreachDefenderSubmissions', JSON.stringify(allSubmissions));
+                
                 updateLeaderboardDisplay();
                 
-                // Smooth transition back to menu
-                TweenMax.to('.game-over-screen', 0.5, {
-                    opacity: 0,
-                    ease: Power2.easeOut,
-                    onComplete: function() {
-                        document.querySelector('.game-over-screen').style.display = 'none';
-                        document.querySelector('.menu-screen').style.display = 'flex';
-                        
-                        // Fade in the menu screen
-                        TweenMax.from('.menu-screen', 0.5, {
-                            opacity: 0,
-                            ease: Power2.easeIn,
-                            onComplete: function() {
-                                // Refresh after menu is visible
-                                window.location.reload();
-                            }
-                        });
-                    }
-                });
+                // Return to menu with animation and immediate refresh
+                document.querySelector('.game-over-screen').classList.remove('show');
+                document.querySelector('.game-over-content').classList.remove('show');
+                setTimeout(() => {
+                    document.querySelector('.game-over-screen').style.display = 'none';
+                    document.querySelector('.menu-screen').style.display = 'flex';
+                    // Immediate refresh
+                    window.location.reload();
+                }, 100);
+            } else {
+                alert('Please enter both your name and email to submit your score');
             }
         }
 
@@ -3398,33 +3795,46 @@
                 }
             }, { passive: false });
             
-            // Handle touch events for the game
+            // Handle touch events for the game with optimized event handling
             const gameElement = document.querySelector('.game');
             if (gameElement) {
+                // Use touchstart for immediate response
                 gameElement.addEventListener('touchstart', handleTouch, { passive: false });
+                
+                // Add touchmove for continuous tracking in survival mode
+                gameElement.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                    if (gameMode === 'survival' && isPlayerAlive) {
+                        const touch = e.touches[0];
+                        const playerCircle = document.querySelector('.player-circle');
+                        if (playerCircle) {
+                            // Use transform for better performance
+                            playerCircle.style.transform = `translate(${touch.clientX - 15}px, ${touch.clientY - 15}px)`;
+                        }
+                    }
+                }, { passive: false });
             }
             
-            // Add touch events for menu buttons
+            // Optimize touch events for menu buttons
             const menuButtons = document.querySelectorAll('.mode-button');
             menuButtons.forEach(button => {
+                // Use touchstart for immediate visual feedback
                 button.addEventListener('touchstart', function(e) {
                     e.preventDefault();
-                    // Add visual feedback
                     this.style.transform = 'scale(0.95)';
                     this.style.opacity = '0.8';
                 }, { passive: false });
                 
+                // Use touchend for action
                 button.addEventListener('touchend', function(e) {
                     e.preventDefault();
-                    // Remove visual feedback
                     this.style.transform = 'scale(1)';
                     this.style.opacity = '1';
-                    // Trigger the click event
                     this.click();
                 }, { passive: false });
             });
             
-            // Add touch events for settings icon
+            // Optimize settings icon touch events
             const settingsIcon = document.querySelector('.settings-icon');
             if (settingsIcon) {
                 settingsIcon.addEventListener('touchstart', function(e) {
@@ -3439,7 +3849,7 @@
                 }, { passive: false });
             }
             
-            // Add touch events for settings menu items
+            // Optimize settings menu touch events
             const settingsToggles = document.querySelectorAll('.settings-toggle');
             settingsToggles.forEach(toggle => {
                 toggle.addEventListener('touchstart', function(e) {
@@ -3454,7 +3864,7 @@
                 }, { passive: false });
             });
             
-            // Add touch events for settings buttons
+            // Optimize settings buttons touch events
             const settingsButtons = document.querySelectorAll('.settings-button');
             settingsButtons.forEach(button => {
                 button.addEventListener('touchstart', function(e) {
@@ -3471,7 +3881,7 @@
                 }, { passive: false });
             });
             
-            // Add touch events for name input
+            // Optimize name input touch events
             const nameInput = document.querySelector('.name-input');
             if (nameInput) {
                 nameInput.addEventListener('touchstart', function(e) {
@@ -3480,9 +3890,6 @@
                     showKeyboard(this);
                 }, { passive: false });
             }
-            
-            // Setup keyboard key events
-            setupKeyboard();
         }
         
         // Function to setup keyboard functionality
@@ -3501,6 +3908,28 @@
                     }
                 });
             }
+            
+            // Function to show keyboard
+            window.showKeyboard = function(input) {
+                keyboard.classList.add('show');
+                activeInput = input;
+                // Reset shift state
+                isShiftActive = false;
+                const shiftKey = keyboard.querySelector('.keyboard-key.shift');
+                shiftKey.classList.remove('active');
+                updateLetterCase();
+            };
+            
+            // Function to hide keyboard
+            window.hideKeyboard = function() {
+                keyboard.classList.remove('show');
+                activeInput = null;
+                // Reset shift state
+                isShiftActive = false;
+                const shiftKey = keyboard.querySelector('.keyboard-key.shift');
+                shiftKey.classList.remove('active');
+                updateLetterCase();
+            };
             
             keys.forEach(key => {
                 key.addEventListener('touchstart', function(e) {
@@ -3530,47 +3959,12 @@
                             this.classList.toggle('active');
                             updateLetterCase();
                         } else {
-                            // Add the pressed key to input
-                            let char = this.textContent;
-                            if (isShiftActive && char.match(/[a-z]/i)) {
-                                char = char.toUpperCase();
-                            }
-                            activeInput.value += char;
-                            // Auto-disable shift after one character
-                            if (isShiftActive) {
-                                isShiftActive = false;
-                                const shiftKey = keyboard.querySelector('.keyboard-key.shift');
-                                shiftKey.classList.remove('active');
-                                updateLetterCase();
-                            }
+                            // Add the character
+                            activeInput.value += this.textContent;
                         }
                     }
                 }, { passive: false });
             });
-            
-            // Function to show keyboard
-            window.showKeyboard = function(input) {
-                activeInput = input;
-                keyboard.classList.add('show');
-                // Reset shift state
-                isShiftActive = false;
-                const shiftKey = keyboard.querySelector('.keyboard-key.shift');
-                shiftKey.classList.remove('active');
-                updateLetterCase();
-                // Scroll input into view if needed
-                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            };
-            
-            // Function to hide keyboard
-            window.hideKeyboard = function() {
-                keyboard.classList.remove('show');
-                activeInput = null;
-                // Reset shift state
-                isShiftActive = false;
-                const shiftKey = keyboard.querySelector('.keyboard-key.shift');
-                shiftKey.classList.remove('active');
-                updateLetterCase();
-            };
             
             // Hide keyboard when clicking outside
             document.addEventListener('touchstart', function(e) {
@@ -3742,147 +4136,6 @@
             });
         }
 
-        // Add combo system variables
-        // let currentCombo = 0;
-        // let lastHitTime = 0;
-        // let comboTimeout = null;
-        // let totalBonusPoints = 0;
-        // const COMBO_TIMEOUT = 2000; // 2 seconds to maintain combo
-        // const COMBO_MULTIPLIER = 0.5; // 50% bonus per combo level
-
-        // Function to update combo
-        // function updateCombo(hit) {
-        //     const now = Date.now();
-        //     const comboIndicator = document.querySelector('.combo-indicator');
-            
-        //     if (hit) {
-        //         // Clear any existing timeout
-        //         if (comboTimeout) {
-        //             clearTimeout(comboTimeout);
-        //         }
-                
-        //         // Increment combo
-        //         currentCombo++;
-                
-        //         // Calculate bonus points
-        //         const bonusPoints = Math.floor(currentCombo * COMBO_MULTIPLIER);
-        //         totalBonusPoints += bonusPoints;
-                
-        //         // Update display
-        //         comboIndicator.style.display = 'block';
-        //         comboIndicator.querySelector('.combo-count').textContent = currentCombo;
-        //         comboIndicator.querySelector('.combo-bonus').textContent = `+${bonusPoints}`;
-        //         comboIndicator.classList.add('active');
-                
-        //         // Remove active class after animation
-        //         setTimeout(() => {
-        //             comboIndicator.classList.remove('active');
-        //         }, 300);
-                
-        //         // Set timeout to reset combo
-        //         comboTimeout = setTimeout(() => {
-        //             currentCombo = 0;
-        //             comboIndicator.style.display = 'none';
-        //         }, COMBO_TIMEOUT);
-        //     } else {
-        //         // Reset combo on miss
-        //         currentCombo = 0;
-        //         comboIndicator.style.display = 'none';
-        //         if (comboTimeout) {
-        //             clearTimeout(comboTimeout);
-        //         }
-        //     }
-        // }
-
-        // // Function to get total score including bonus
-        // function getTotalScore() {
-        //     return swatCount + totalBonusPoints;
-        // }
-
-        // // Modify the existing checkPoint function to include combo system
-        // const originalCheckPoint = checkPoint;
-        // checkPoint = function(x, y) {
-        //     const result = originalCheckPoint(x, y);
-        //     if (result) {
-        //         updateCombo(true);
-        //     } else {
-        //         updateCombo(false);
-        //     }
-        //     return result;
-        // };
-
-        // // Modify the existing submitScore function to include bonus points
-        // const originalSubmitScore = submitScore;
-        // submitScore = function() {
-        //     var name = document.querySelector('.name-input').value.trim();
-        //     if (name) {
-        //         var score = {
-        //             name: name,
-        //             score: getTotalScore(), // Use total score including bonus
-        //             date: new Date().toLocaleDateString()
-        //         };
-                
-        //         highScores.push(score);
-        //         highScores.sort((a, b) => b.score - a.score);
-        //         highScores = highScores.slice(0, 10);
-        //         localStorage.setItem('databreachDefenderHighScores', JSON.stringify(highScores));
-        //         updateLeaderboardDisplay();
-                
-        //         // Return to menu with animation
-        //         document.querySelector('.game-over-screen').classList.remove('show');
-        //         document.querySelector('.game-over-content').classList.remove('show');
-        //         setTimeout(() => {
-        //             document.querySelector('.game-over-screen').style.display = 'none';
-        //             document.querySelector('.menu-screen').style.display = 'flex';
-        //         }, 500);
-        //     }
-        // };
-
-        // // Modify the existing endGame function to show total score
-        // const originalEndGame = endGame;
-        // endGame = function() {
-        //     originalEndGame();
-        //     document.querySelector('.final-score').textContent = getTotalScore();
-        //     document.getElementById('high-score').textContent = getTotalScore();
-        // };
-
-        // Add to your DOMContentLoaded event listener
-        document.addEventListener('DOMContentLoaded', function() {
-            // Ensure cursor is visible on the main menu
-            document.body.style.cursor = 'default';
-            
-            // Show menu content with animation
-            setTimeout(() => {
-                document.querySelector('.menu-content').classList.add('show');
-            }, 300);
-            
-            // Initialize facts display
-            initFacts();
-            
-            // Initialize debug toggle state
-            updateDebugToggleState();
-            
-            // Initialize performance monitor toggle state
-            const perfToggle = document.querySelectorAll('.settings-toggle')[2];
-            if (perfToggle) {
-                if (showPerformanceMonitor) {
-                    perfToggle.classList.add('active');
-                } else {
-                    perfToggle.classList.remove('active');
-                }
-            }
-            
-            // Initialize hitbox visualization toggle state
-            const hitboxToggle = document.querySelectorAll('.settings-toggle')[3];
-            if (hitboxToggle) {
-                if (showHitboxes) {
-                    hitboxToggle.classList.add('active');
-                } else {
-                    hitboxToggle.classList.remove('active');
-                }
-            }
-        });
-
         // Add speed settings variables
         let gnatSpeeds = {
             '.shield-icon': 10,
@@ -3969,12 +4222,6 @@
             showNotification('Gnat speeds updated!', 'rgba(77, 153, 211, 0.9)');
         }
 
-        // Add to your DOMContentLoaded event listener
-        document.addEventListener('DOMContentLoaded', function() {
-            // ... existing code ...
-            initializeSpeedSettings();
-        });
-
         // Function to clear leaderboard
         function clearLeaderboard() {
             if (confirm('Are you sure you want to clear the leaderboard? This cannot be undone.')) {
@@ -3985,6 +4232,110 @@
                 // Show notification
                 showNotification('Leaderboard cleared!', 'rgba(255, 0, 0, 0.9)');
             }
+        }
+
+        function viewAllSubmissions() {
+            var submissions = JSON.parse(localStorage.getItem('databreachDefenderSubmissions') || '[]');
+            if (submissions.length === 0) {
+                alert('No submissions found');
+                return;
+            }
+
+            // Create a formatted string of all submissions
+            var submissionText = submissions.map((sub, index) => {
+                return `${index + 1}. Name: ${sub.name}\n   Email: ${sub.email}\n   Score: ${sub.score}\n   Date: ${sub.date}\n`;
+            }).join('\n');
+
+            // Create modal backdrop
+            var backdrop = document.createElement('div');
+            backdrop.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 9998;
+                backdrop-filter: blur(5px);
+            `;
+
+            // Create a modal to display submissions
+            var modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(10, 10, 26, 0.95);
+                padding: 20px;
+                border-radius: 10px;
+                max-width: 80%;
+                max-height: 80vh;
+                overflow-y: auto;
+                z-index: 9999;
+                color: white;
+                font-family: 'Poppins', sans-serif;
+                border: 1px solid rgba(77, 153, 211, 0.3);
+            `;
+
+            var content = document.createElement('div');
+            content.style.cssText = `
+                white-space: pre-wrap;
+                font-size: 14px;
+                line-height: 1.5;
+            `;
+            content.textContent = submissionText;
+
+            var closeButton = document.createElement('button');
+            closeButton.textContent = 'Close';
+            closeButton.style.cssText = `
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: #4D99D3;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                color: white;
+                cursor: pointer;
+                font-family: 'Poppins', sans-serif;
+            `;
+            closeButton.onclick = () => modal.remove();
+
+            var exportButton = document.createElement('button');
+            exportButton.textContent = 'Export to CSV';
+            exportButton.style.cssText = `
+                position: absolute;
+                top: 10px;
+                right: 80px;
+                background: #4D99D3;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                color: white;
+                cursor: pointer;
+                font-family: 'Poppins', sans-serif;
+            `;
+            exportButton.onclick = () => {
+                var csv = 'Name,Email,Score,Date\n';
+                submissions.forEach(sub => {
+                    csv += `${sub.name},${sub.email},${sub.score},${sub.date}\n`;
+                });
+                var blob = new Blob([csv], { type: 'text/csv' });
+                var url = window.URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.setAttribute('hidden', '');
+                a.setAttribute('href', url);
+                a.setAttribute('download', 'databreach_defender_submissions.csv');
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            };
+
+            modal.appendChild(closeButton);
+            modal.appendChild(exportButton);
+            modal.appendChild(content);
+            document.body.appendChild(modal);
         }
 
         // Add variable to track temp game over button visibility
@@ -4402,5 +4753,32 @@
     <audio autoplay preload loop>
         <source src="assets/sfx/music.mp3" type="audio/mpeg">
     </audio>
+    <!-- Add Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        const swiper = new Swiper('.swiper', {
+            // Optional parameters
+            direction: 'horizontal',
+            loop: true,
+            
+            // If you want pagination
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            
+            // Navigation arrows
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            
+            // Auto play if desired
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: false,
+            },
+        });
+    </script>
 </body>
 </html>
