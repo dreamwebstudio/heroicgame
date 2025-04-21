@@ -1,0 +1,4138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Databreach Defender</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TweenMax.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.3/TimelineMax.min.js"></script>
+    <style>
+        html {
+            font-size: 1vw;
+        }
+        body {
+            margin: 0;
+            overflow: hidden;
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-select: none;   /* Chrome/Safari/Opera */
+            -khtml-user-select: none;    /* Konqueror */
+            -moz-user-select: none;      /* Firefox */
+            -ms-user-select: none;       /* Internet Explorer/Edge */
+            user-select: none;  
+            font-family: 'Poppins', sans-serif;
+            background-color: #0a0a1a;
+            touch-action: manipulation; /* Prevent browser handling of touch events */
+        }
+        /* Mobile-friendly adjustments */
+        @media (max-width: 768px) {
+            html {
+                font-size: 3vw; /* Larger base font size for mobile */
+            }
+            
+            .title {
+                font-size: 4rem; /* Smaller title for mobile */
+                margin-bottom: 1rem;
+            }
+            
+            .button, .mode-button {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+                width: 80%; /* Wider buttons for touch */
+                max-width: 450px;
+            }
+            
+            .game-modes {
+                flex-direction: column;
+                gap: 15px;
+                width: 100%;
+                align-items: center;
+            }
+            
+            .instruction-content {
+                width: 85%;
+                padding: 1.5rem;
+            }
+            
+            .game-over-content {
+                width: 85%;
+                padding: 1.5rem;
+            }
+            
+            .leaderboard {
+                width: 80%;
+                max-width: 300px;
+            }
+            
+            .timer {
+                width: 80px;
+                height: 80px;
+                top: 10px;
+                right: 10px;
+            }
+            
+            .timer-text {
+                font-size: 1.5rem;
+            }
+            
+            .health-bar {
+                width: 150px;
+                height: 15px;
+                top: 10px;
+                left: 10px;
+            }
+            
+            .player-circle {
+                width: 40px; /* Larger player circle for touch */
+                height: 40px;
+            }
+            
+            .settings-icon {
+                width: 30px;
+                height: 30px;
+                top: 10px;
+                right: 10px;
+            }
+            
+            .settings-menu {
+                width: 80%;
+                max-width: 250px;
+                top: 50px;
+                right: 10px;
+            }
+            
+            .debug-info-panel {
+                font-size: 10px;
+                padding: 5px;
+            }
+            
+            .debug-toggle {
+                bottom: 10px;
+                left: 10px;
+                padding: 5px 8px;
+                font-size: 10px;
+            }
+            
+            .fact-text {
+                font-size: 0.8rem;
+                max-width: 80%;
+                padding: 8px 15px;
+            }
+            
+            .name-input {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .game-over-title {
+                font-size: 1.5rem;
+            }
+            
+            .final-score {
+                font-size: 1.8rem;
+            }
+            
+            .high-score-display {
+                font-size: 1rem;
+            }
+            
+            .submit-score {
+                padding: 0.6rem 1.2rem;
+                font-size: 18px;
+            }
+            
+            .skip-score {
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Small mobile devices */
+        @media (max-width: 480px) {
+            html {
+                font-size: 4vw;
+            }
+            
+            .title {
+                font-size: 3rem;
+            }
+            
+            .button, .mode-button {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.6rem;
+            }
+            
+            .instruction-content, .game-over-content {
+                padding: 1rem;
+            }
+            
+            .timer {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .timer-text {
+                font-size: 1.2rem;
+            }
+            
+            .health-bar {
+                width: 120px;
+                height: 12px;
+            }
+            
+            .player-circle {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .fact-text {
+                font-size: 0.7rem;
+                max-width: 90%;
+            }
+        }
+        
+        /* Landscape orientation adjustments */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .title {
+                font-size: 2.5rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .game-modes {
+                flex-direction: row;
+                margin-top: 10px;
+            }
+            
+            .instruction-content, .game-over-content {
+                padding: 1rem;
+            }
+            
+            .timer {
+                width: 50px;
+                height: 50px;
+                top: 5px;
+                right: 5px;
+            }
+            
+            .health-bar {
+                width: 100px;
+                height: 10px;
+                top: 5px;
+                left: 5px;
+            }
+            
+            .fact-text {
+                font-size: 0.7rem;
+                max-width: 70%;
+            }
+        }
+        
+        /* Prevent text size adjustment on orientation change */
+        @media screen and (max-width: 768px) {
+            html {
+                -webkit-text-size-adjust: 100%;
+            }
+        }
+        
+        /* Fix for iOS Safari 100vh issue */
+        @supports (-webkit-touch-callout: none) {
+            .menu-screen, .game-over-screen, .instruction-screen {
+                height: -webkit-fill-available;
+            }
+        }
+        
+        /* Improve touch targets */
+        .mode-button, .button, .settings-option, .submit-score, .skip-score {
+            min-height: 20px; /* Apple's recommended minimum touch target size */
+        }
+        
+        /* Prevent pull-to-refresh on mobile */
+        body {
+            overscroll-behavior-y: contain;
+        }
+        
+        /* Improve tap highlight color */
+        * {
+            -webkit-tap-highlight-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Rest of your existing styles */
+        .game {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            background-color: #0a0a1a;
+
+
+        }
+
+        .animated-container {
+            animation: fivesecondanimation 30s ease-in-out infinite;
+            outline-offset: -5px;
+        }
+
+        @keyframes fivesecondanimation {
+            84% {
+              outline: 5px solid rgba(255, 0, 0, 0); 
+            }
+            /*start of first cycle*/
+            85% {
+                outline: 1px solid red;}
+           
+            87% {
+                outline: 5px solid rgba(255, 0, 0, 0);}
+            /*start of second cycle*/
+            88% {
+                outline: 1px solid red;}
+            90% {
+                outline: 5px solid rgba(255, 0, 0, 0); }
+            /*start of third cycle*/
+            91% {
+                outline: 1px solid red;}
+            
+            93% {
+                outline: 5px solid rgba(255, 0, 0, 0); }
+            /*start of fourth cycle*/
+            94% {
+                outline: 1px solid red; }
+            96% {
+                outline: 5px solid rgba(255, 0, 0, 0); }
+
+            /*start of fifth cycle*/
+            97% {
+                outline: 1px solid red; 
+            }
+            99% {
+                outline: 5px solid rgba(255, 0, 0, 0); }
+
+            100% {
+                outline: 1px solid red; 
+            }
+        }
+
+
+
+        .counter {
+            width: 100px;
+            height 100px;
+            top: 10px;
+            right: calc(50% - 80px);
+            position: fixed;
+            display: none;
+            background: rgba(59, 59, 59, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+
+        .menu-screen, .game-over-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #0a0a1a;
+            color: white;
+            z-index: 1000;
+        }
+        .game-over-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            background: #0a0a1a;
+            color: white;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            overflow: hidden;
+            padding: 2rem;
+        }
+        .game-over-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: gridMove 20s linear infinite;
+            opacity: 0.2;
+        }
+        .game-over-screen::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            animation: pulseGlow 4s ease-in-out infinite alternate;
+            opacity: 0.3;
+        }
+        .game-over-content {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            width: 100%;
+            padding: 30px;
+            max-width: 500px;
+            text-align: center;
+            transform: translateY(50px);
+            opacity: 0;
+            transition: all 0.5s ease;
+            position: relative;
+            z-index: 1;
+            border: 2px solid transparent;
+            animation: borderGlow 3s linear infinite;
+            height: fit-content;
+        }
+        .game-over-screen.show {
+            opacity: 1;
+        }
+        .game-over-content.show {
+            transform: translateY(0);
+            opacity: 1;
+            overflow: hidden;
+        }
+        .game-over-screen .leaderboard {
+            position: absolute;
+            right: 100px;
+            top: 20px;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        .game-over-screen.show .leaderboard {
+            opacity: 1;
+        }
+        .leaderboard h2 {
+            text-align: center;
+            margin-bottom: -.5rem;
+            font-family: "Russo One", sans-serif;
+            border-bottom: 1px solid #ffffff4d;
+            font-size: .9rem;
+            padding-bottom: 10px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            font-weight: 400;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+        }
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+            margin-top: 20px;
+        }
+        .leaderboard-table th,
+        .leaderboard-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(77, 153, 211, 0.2);
+        }
+        .leaderboard-table th {
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 500;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .leaderboard-table td {
+            color: white;
+            font-size: 0.9em;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .leaderboard-table tr {
+            margin-bottom: 10px;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: slideInRow 0.5s ease forwards;
+        }
+
+        @keyframes slideInRow {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Top 3 positions styling */
+        #leaderboard-body tr:nth-child(1) {
+            background: linear-gradient(90deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 255, 255, 0.10) 100%);
+        }
+
+        #leaderboard-body tr:nth-child(2) {
+            background: linear-gradient(90deg, rgba(192, 192, 192, 0.15) 0%, rgba(255, 255, 255, 0.10) 100%);
+        }
+
+        #leaderboard-body tr:nth-child(3)  {
+            background: linear-gradient(90deg, rgba(205, 127, 50, 0.15) 0%, rgba(255, 255, 255, 0.10) 100%);
+            
+        }
+        #leaderboard-body tr:nth-child(1) > td:first-child  {
+            border-left: 3px solid #CD7F32 !important;
+        }
+
+        #leaderboard-body tr:nth-child(2) > td:first-child  {
+            border-left: 3px solid #C0C0C0 !important;
+        }
+
+
+        #leaderboard-body tr:nth-child(3) > td:first-child  {
+            border-left: 3px solid #917151 !important;
+        }
+
+        /* Add animation delay for each row */
+        .leaderboard-table tr:nth-child(1) { animation-delay: 0.1s; }
+        .leaderboard-table tr:nth-child(2) { animation-delay: 0.2s; }
+        .leaderboard-table tr:nth-child(3) { animation-delay: 0.3s; }
+        .leaderboard-table tr:nth-child(4) { animation-delay: 0.4s; }
+        .leaderboard-table tr:nth-child(5) { animation-delay: 0.5s; }
+        .leaderboard-table tr:nth-child(6) { animation-delay: 0.6s; }
+        .leaderboard-table tr:nth-child(7) { animation-delay: 0.7s; }
+        .leaderboard-table tr:nth-child(8) { animation-delay: 0.8s; }
+        .leaderboard-table tr:nth-child(9) { animation-delay: 0.9s; }
+        .leaderboard-table tr:nth-child(10) { animation-delay: 1s; }
+        .leaderboard-table tr:last-child td {
+            border-bottom: none;
+        }
+        .leaderboard-table .rank {
+            width: 40px;
+        }
+        .leaderboard-table .score {
+            width: 60px;
+            text-align: right;
+        }
+        .title {
+            font-size: 8rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            line-height: 100%;
+            margin-top: 0px;
+            text-transform: uppercase;
+            font-family: "Russo One", sans-serif;
+        }
+        .button {
+            padding: 1rem 2rem;
+            font-size: 1.5rem;
+            background-color: #aa1515;
+            text-transform: uppercase;
+            font-size: 20px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        .button:hover {
+            background-color: #5c0505;
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+        .button:active {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            z-index: 100;
+            display: none;
+        }
+        .timer-circle {
+            transform: rotate(-90deg);
+            transform-origin: center;
+        }
+        .timer-circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.2);
+            stroke-width: 8;
+        }
+        .timer-circle-progress {
+            fill: none;
+            stroke: #4D99D3;
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s linear;
+        }
+        .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .name-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid rgba(77, 153, 211, 0.3);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: rgb(0, 0, 0);
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .name-input:focus {
+            outline: none;
+            border-color: #4D99D3;
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        /* Onscreen Keyboard Styles */
+        .onscreen-keyboard {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 10, 26, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 10px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 9999;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .onscreen-keyboard.show {
+            transform: translateY(0);
+        }
+        
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .keyboard-key {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            padding: 10px;
+            min-width: 40px;
+            text-align: center;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        
+        .keyboard-key:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .keyboard-key:active {
+            background: rgba(77, 153, 211, 0.3);
+            transform: scale(0.95);
+        }
+        
+        .keyboard-key.wide {
+            min-width: 80px;
+        }
+        
+        .keyboard-key.space {
+            min-width: 200px;
+        }
+        
+        .keyboard-key.delete {
+            min-width: 60px;
+        }
+        
+        .keyboard-key.done {
+            background: #4D99D3;
+            min-width: 80px;
+        }
+        
+        .keyboard-key.done:hover {
+            background: #3d89c3;
+        }
+        .high-score {
+            margin-top: 1rem;
+            font-size: 1.5rem;
+        }
+        .menu-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #0a0a1a;
+            color: white;
+            z-index: 1000;
+            overflow: hidden;
+        }
+        .menu-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: gridMove 20s linear infinite;
+            opacity: 0.2;
+        }
+        .menu-screen::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            animation: pulseGlow 4s ease-in-out infinite alternate;
+            opacity: 0.3;
+        }
+        
+        /* Settings menu styles */
+        .settings-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+        
+        .settings-icon:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: rotate(30deg);
+        }
+        
+        .settings-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+        
+        .settings-menu {
+            position: fixed;
+            top: 0;
+            left: -330px;
+            width: 280px;
+            height: 100vh;
+            background: rgb(229 229 229 / 7%);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            z-index: 1000;
+            transition: left 0.3s ease;
+        }
+
+        .settings-menu.active {
+            left: 0;
+        }
+
+        .settings-icon {
+            position: absolute;
+            right: -30px;
+            top: 2rem;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1001;
+            transition: all 0.3s ease;
+        }
+        
+        .settings-icon:hover {
+            background-color: rgba(77, 153, 211, 0.8);
+            transform: scale(1.1);
+        }
+        
+        .settings-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+        
+        .settings-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 10px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            background-color: #ffffff10;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+
+        
+        .settings-option-label {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: white;
+        }
+        
+        .settings-toggle {
+            width: 40px;
+            height: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .settings-toggle::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .settings-toggle.active {
+            background-color: #4D99D3;
+        }
+        
+        .settings-toggle.active::after {
+            left: 22px;
+        }
+        
+        .settings-button {
+            background-color: rgba(255, 0, 0, 0.432);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            margin: 10px 0px;
+            width: 100%;
+        }
+        
+        .settings-button:hover {
+            background-color: rgba(255, 0, 0, 0.4);
+        }
+        
+        .settings-divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 10px 0;
+            margin-bottom: 20px;
+        }
+        
+        .debug-info-panel {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            display: none;
+            z-index: 9999; /* Increased from 1000 to 9999 to ensure it's on top */
+            pointer-events: none; /* Allow clicks to pass through to elements below */
+        }
+        
+        .hitbox-visualization {
+            position: absolute;
+            border: 2px solid rgba(255, 0, 0, 0.5);
+            background: rgba(255, 0, 0, 0.1);
+            pointer-events: none;
+            display: none;
+        }
+        
+        .settings-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Speed Control Styles */
+        .speed-control {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .speed-presets {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .speed-preset-btn {
+            padding: 8px 15px;
+            border: 1px solid #e9e9e94d;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .speed-preset-btn:hover {
+            background: rgba(77, 153, 211, 0.2);
+        }
+
+        .speed-preset-btn.active {
+            background: #ffffff;
+            color: rgb(0, 0, 0);
+        }
+
+        .speed-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .settings-option .settings-option-label {
+            width: 100%;
+            text-align: left;
+        }
+
+    
+
+        .speed-input-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .speed-input-group label {
+            color: white;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .speed-input-group input {
+            width: 60px;
+            padding: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .speed-input-group input:focus {
+            outline: none;
+            border-color: #4D99D3;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .speed-input-group input::-webkit-inner-spin-button,
+        .speed-input-group input::-webkit-outer-spin-button {
+            opacity: 1;
+        }
+
+        .settings-divider {
+            height: 1px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 5px 0;
+        }
+        
+        /* Mouse hitbox indicator */
+        .mouse-hitbox {
+            position: fixed;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            background-color: rgba(77, 153, 211, 0.1);
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: none; /* Remove transition to prevent lag */
+            will-change: transform; /* Optimize for animations */
+        }
+        .menu-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            transform: translateY(50px);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        .menu-content.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .menu-logo {
+            width: 240px;
+            height: auto;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+        }
+        
+        /* Debug mode toggle styles */
+        .debug-toggle {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            background-color: rgba(10, 10, 26, 0.7);
+            border-radius: 5px;
+            padding: 8px 12px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(77, 153, 211, 0.3);
+            z-index: 1000;
+        }
+        
+        .debug-toggle:hover {
+            background-color: rgba(10, 10, 26, 0.9);
+            border-color: rgba(77, 153, 211, 0.5);
+        }
+        
+        .debug-toggle .toggle-switch {
+            width: 40px;
+            height: 20px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin-left: 10px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .debug-toggle .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .debug-toggle.active .toggle-switch {
+            background-color: #4D99D3;
+        }
+        
+        .debug-toggle.active .toggle-switch::after {
+            left: 22px;
+        }
+        
+        .debug-toggle .toggle-label {
+            margin-right: 5px;
+        }
+        
+        .debug-toggle .status {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-left: 5px;
+        }
+        
+        .debug-toggle.active .status {
+            color: #4D99D3;
+        }
+        .leaderboard {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 250px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 0.75rem;
+            overflow-y: auto;
+            overflow-x: hidden;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            z-index: 1;
+        }
+        .game-over-screen .leaderboard {
+            position: absolute;
+        }
+        .leaderboard h2 {
+            text-align: center;
+            margin-bottom: -.5rem;
+            border-bottom: 1px solid #ffffff4d;
+            font-size: .9rem;
+            padding-bottom: 10px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            font-weight: 400;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+        }
+        tbody#leaderboard-body tr,
+        tbody#game-over-leaderboard-body tr {
+            background-color: #ffffff15 !important;
+            border-radius: 10px;
+            margin-bottom: 5px !important;
+        }
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+            margin-top: 20px;
+        }
+        .leaderboard-table th,
+        .leaderboard-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid rgba(77, 153, 211, 0.2);
+        }
+        .leaderboard-table th {
+            color: #ffffff;
+            font-size: 15px !important;
+            font-weight: 500;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .leaderboard-table td {
+            color: white;
+            font-size: 17px;
+            font-weight: 300 !important;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .leaderboard-table tr {
+            margin-bottom: 10px;
+        }
+        .leaderboard-table tr:last-child td {
+            border-bottom: none;
+        }
+        .leaderboard-table .rank {
+            width: 40px;
+            text-align: left;
+            padding-left: 0px;
+        }
+
+        .leaderboard-table td.rank {
+            padding-left: 15px;
+        }
+
+        .leaderboard-table .score {
+            width: 60px;
+            text-align: right;
+        }
+        .score-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid rgba(77, 153, 211, 0.2);
+            color: white;
+            font-size: 0.9em;
+        }
+        .score-entry:last-child {
+            border-bottom: none;
+        }
+        .score-name {
+            flex: 1;
+        }
+        .score-value {
+            margin: 0 20px;
+            color: #4D99D3;
+        }
+        .score-date {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8em;
+        }
+        .game-over-title {
+            font-size: 40px;
+            margin-bottom: 0px;
+            margin-top: 10px;
+            color: #1a237e;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            font-family: "Russo One", sans-serif;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .final-score {
+            display: none !important;
+            font-size: 2.5rem;
+            margin: 1rem 0;
+            color: #1a237e;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            font-family: "Russo One", sans-serif;
+            position: relative;
+            display: inline-block;
+        }
+        .final-score::before {
+            content: '🏆';
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            animation: trophyFloat 2s ease-in-out infinite;
+        }
+        .final-score::after {
+            content: '🏆';
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            animation: trophyFloat 2s ease-in-out infinite reverse;
+        }
+        .game-over-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .submit-score {
+            padding: 15px 10px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(45deg, #1a237e, #4D99D3);
+            color: white;
+            border: none;
+            width: 100%;
+        }
+        .skip-score {
+            margin-top: 10px;
+            text-decoration: none;
+            font-size: 16px;
+            color: #1a237e;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            text-decoration: underline;
+            opacity: 0.7;
+        }
+        .skip-score:hover {
+            opacity: 1;
+        }
+        .high-score-display {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #1a237e;
+            font-weight: 600;
+            letter-spacing: -1px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        @keyframes trophyFloat {
+            0%, 100% { transform: translateY(-50%) rotate(-10deg); }
+            50% { transform: translateY(-50%) rotate(10deg); }
+        }
+        .instruction-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #0a0a1a;
+            color: white;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            overflow: hidden;
+        }
+        .instruction-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            animation: gridMove 20s linear infinite;
+            opacity: 0.2;
+        }
+        .instruction-screen::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            animation: pulseGlow 4s ease-in-out infinite alternate;
+            opacity: 0.3;
+        }
+        @keyframes gridMove {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 20px 20px;
+            }
+        }
+        @keyframes pulseGlow {
+            0% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0.5;
+                transform: scale(1.1);
+            }
+        }
+        .instruction-content {
+            background-color: white;
+            border-radius: 20px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            transform: translateY(50px);
+            opacity: 0;
+            transition: all 0.5s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        .fancy-text {
+            font-family: 'Russo One', sans-serif;
+            width: 100%;
+            font-size: min(3vw, 36px);
+            margin-top:  0px;
+            margin-bottom: -10px !important;
+            transform: skew(-10deg);
+            color: rgb(163, 0, 0) !important;
+            margin-bottom: 0px;
+        }
+        .instruction-content .button {
+            width: 100% !important;
+            font-size: 18px !important;
+        }
+        .instruction-text {
+        }
+        .welcome-text {
+            font-size: 20px;
+            font-weight: 400;
+            margin-bottom: -10px;
+            letter-spacing: 5px;
+            opacity: 0.8;
+            color: #5c5c5c;
+        }
+        .instruction-text .instruction-text {
+            font-size: 20px !important;
+            margin-bottom: 2rem;
+            line-height: 1.2em;
+            font-family: poppins;
+            color: #242424;
+        }
+        .instruction-screen.show {
+            opacity: 1;
+        }
+        .instruction-content.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        #leaderboard-body, #game-over-leaderboard-body {
+        vertical-align: top;
+        }
+        .temp-game-over-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: rgba(26, 35, 126, 0.8);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        .temp-game-over-btn:hover {
+            background: rgba(26, 35, 126, 1);
+            transform: translateY(-2px);
+        }
+        /* Facts Display */
+        .facts-container {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .game-over-screen .facts-container {
+            position: fixed;
+            bottom: 40px;
+            z-index: 1001;
+        }
+
+        .fact-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            max-width: 60%;
+            margin: 0 auto;
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.048);
+            border-radius: 5px;
+            border-left: 3px solid #4D99D3;
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.4;
+        }
+
+        .facts-container.show {
+            opacity: 1;
+        }
+
+        .gnat.dying {
+            filter: url(#glow) brightness(1.5);
+        }
+
+        .game-modes {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .mode-button {
+            padding: 1rem 2rem;
+            font-size: 20px;
+            background-color: #aa1515;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mode-button:hover {
+            background-color: #5c0505;
+            transform: translateY(-2px);
+        }
+
+        .mode-button:active {
+            transform: translateY(0);
+        }
+
+        .mode-description {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .health-bar {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 200px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .health-fill {
+            width: 100%;
+            height: 100%;
+            background: #4CAF50;
+            transition: width 0.3s ease;
+        }
+
+        .player-circle {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Add to your CSS */
+        .keyboard-key.shift {
+            background: rgba(77, 153, 211, 0.3);
+            min-width: 60px;
+        }
+        
+        .keyboard-key.shift.active {
+            background: #4D99D3;
+        }
+
+        /* Combo System Styles */
+        /* .combo-indicator {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1000;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .combo-count {
+            font-size: 48px;
+            font-weight: bold;
+            color: #4D99D3;
+            text-shadow: 0 0 10px rgba(77, 153, 211, 0.5);
+        }
+
+        .combo-bonus {
+            font-size: 24px;
+            color: #4CAF50;
+            margin-top: 5px;
+        }
+
+        .combo-text {
+            font-size: 18px;
+            color: #FFC107;
+            margin-top: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        @keyframes comboPulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .combo-indicator.active {
+            animation: comboPulse 0.3s ease;
+        } */
+    </style>
+</head>
+<body>
+    <!-- Add onscreen keyboard HTML before the menu screen -->
+    <div class="onscreen-keyboard">
+        <div class="keyboard-row">
+            <div class="keyboard-key">1</div>
+            <div class="keyboard-key">2</div>
+            <div class="keyboard-key">3</div>
+            <div class="keyboard-key">4</div>
+            <div class="keyboard-key">5</div>
+            <div class="keyboard-key">6</div>
+            <div class="keyboard-key">7</div>
+            <div class="keyboard-key">8</div>
+            <div class="keyboard-key">9</div>
+            <div class="keyboard-key">0</div>
+        </div>
+        <div class="keyboard-row">
+            <div class="keyboard-key">q</div>
+            <div class="keyboard-key">w</div>
+            <div class="keyboard-key">e</div>
+            <div class="keyboard-key">r</div>
+            <div class="keyboard-key">t</div>
+            <div class="keyboard-key">y</div>
+            <div class="keyboard-key">u</div>
+            <div class="keyboard-key">i</div>
+            <div class="keyboard-key">o</div>
+            <div class="keyboard-key">p</div>
+        </div>
+        <div class="keyboard-row">
+            <div class="keyboard-key shift">⇧</div>
+            <div class="keyboard-key">a</div>
+            <div class="keyboard-key">s</div>
+            <div class="keyboard-key">d</div>
+            <div class="keyboard-key">f</div>
+            <div class="keyboard-key">g</div>
+            <div class="keyboard-key">h</div>
+            <div class="keyboard-key">j</div>
+            <div class="keyboard-key">k</div>
+            <div class="keyboard-key">l</div>
+        </div>
+        <div class="keyboard-row">
+            <div class="keyboard-key">z</div>
+            <div class="keyboard-key">x</div>
+            <div class="keyboard-key">c</div>
+            <div class="keyboard-key">v</div>
+            <div class="keyboard-key">b</div>
+            <div class="keyboard-key">n</div>
+            <div class="keyboard-key">m</div>
+            <div class="keyboard-key delete">⌫</div>
+        </div>
+        <div class="keyboard-row">
+            <div class="keyboard-key space">space</div>
+            <div class="keyboard-key done">Done</div>
+        </div>
+    </div>
+    <div class="debug-info-panel">
+        <div>FPS: <span id="fps-counter">0</span></div>
+        <div>Frame Time: <span id="frame-time">0</span>ms</div>
+        <div>Active Gnats: <span id="gnat-count">0</span></div>
+        <div>Score: <span id="current-score">0</span></div>
+    </div>
+    <div class="menu-screen">
+        <div class="menu-content">
+            <img src="HEROIC-logo.png" alt="Heroic Logo" class="menu-logo">
+            <h1 class="title">Databreach<br> Defender</h1>
+            <div class="game-modes">
+                <div>
+                    <button class="mode-button" onclick="startGame('attack')">Breach Buster</button>
+                </div>
+                <div>
+                    <button class="mode-button" onclick="startGame('survival')">Dodge & Survive</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-menu">
+            <div class="settings-icon" onclick="toggleSettingsMenu()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97 0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65c-.04-.24-.25-.42-.5-.42h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.63c-.04.32-.07.65-.07.98 0 .33.03.66.07 1l-2.11 1.63c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.31.61.22l2.49-1c.52.39 1.06.73 1.69.98l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.25 1.17-.59 1.69-.98l2.49 1c.22.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.63z"/>
+                </svg>
+            </div>
+            <div class="settings-option" onclick="toggleDebugMode()">
+                <span class="settings-option-label">Debug Mode</span>
+                <div class="settings-toggle"></div>
+            </div>
+            <div class="settings-option" onclick="toggleMouseHitbox()">
+                <span class="settings-option-label">Show Mouse Hitbox</span>
+                <div class="settings-toggle"></div>
+            </div>
+            <div class="settings-option" onclick="togglePerformanceMonitor()">
+                <span class="settings-option-label">Performance Monitor</span>
+                <div class="settings-toggle"></div>
+            </div>
+            <div class="settings-option" onclick="toggleHitboxVisualization()">
+                <span class="settings-option-label">Show Hitboxes</span>
+                <div class="settings-toggle"></div>
+            </div>
+            <div class="settings-option" onclick="toggleTempGameOverButton()">
+                <span class="settings-option-label">Show Temp Game Over Button</span>
+                <div class="settings-toggle"></div>
+            </div>
+            <div class="settings-option" onclick="toggleSurvivalMode()">
+                <span class="settings-option-label">Show Survival Mode</span>
+                <div class="settings-toggle"></div>
+            </div>
+            <div class="settings-option speed-control">
+                <span class="settings-option-label">Gnat Speeds (seconds)</span>
+                <div class="speed-presets">
+                    <button class="speed-preset-btn" onclick="setSpeedPreset(1)">Easy</button>
+                    <button class="speed-preset-btn" onclick="setSpeedPreset(2)">Medium</button>
+                    <button class="speed-preset-btn" onclick="setSpeedPreset(3)">Hard</button>
+                </div>
+                <div class="speed-inputs">
+                    <div class="speed-input-group">
+                        <label>Shield:</label>
+                        <input type="number" id="shield-speed" class="speed-input" min="1" max="20" value="10" step="0.5">
+                    </div>
+                    <div class="speed-input-group">
+                        <label>Password:</label>
+                        <input type="number" id="password-speed" class="speed-input" min="1" max="20" value="7" step="0.5">
+                    </div>
+                    <div class="speed-input-group">
+                        <label>Folder:</label>
+                        <input type="number" id="folder-speed" class="speed-input" min="1" max="20" value="10" step="0.5">
+                    </div>
+                    <div class="speed-input-group">
+                        <label>Banking:</label>
+                        <input type="number" id="banking-speed" class="speed-input" min="1" max="20" value="7" step="0.5">
+                    </div>
+                </div>
+            </div>
+            <button class="settings-button" onclick="clearLeaderboard()">Clear Leaderboard</button>
+            
+        </div>
+
+            <div class="leaderboard">
+                <h2>Leaderboard</h2>
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th class="rank">Rank</th>
+                            <th>Name</th>
+                            <th class="score">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-body">
+                    </tbody>
+                </table>
+            </div>
+        <div class="facts-container">
+            <div class="fact-text" id="menu-fact"></div>
+        </div>
+    </div>
+
+    <div class="instruction-screen">
+        <div class="instruction-content">
+            <div class="instruction-text">
+                <p class="welcome-text">WELCOME TO</p>
+                <p class="fancy-text">The Dark Web.</p>
+                <p class="instruction-text" id="mode-instruction">Your job is to catch as many breaches as you can before the timer runs out. Can you get the high score?</p>
+            </div>
+            <button class="button" onclick="startGameForReal()">Let's Go!</button>
+        </div>
+    </div>
+
+    <div class="game-over-screen">
+        <div class="game-over-content">
+            <h1 class="game-over-title">Game Over</h1>
+            <div class="final-score">Your Score: <span id="final-score">0</span></div>
+            <div class="high-score-display">Score: <span id="high-score">0</span></div>
+            <input type="text" class="name-input" placeholder="Enter your name" maxlength="10">
+            <div class="game-over-buttons">
+                <button class="submit-score" onclick="submitScore()">Submit Score</button>
+                <div class="skip-score" onclick="returnToMenu()">Skip</div>
+            </div>
+        </div>
+        <div class="leaderboard">
+            <h2>Leaderboard</h2>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th class="rank">Rank</th>
+                        <th>Name</th>
+                        <th class="score">Score</th>
+                    </tr>
+                </thead>
+                <tbody id="game-over-leaderboard-body">
+                </tbody>
+            </table>
+        </div>
+        <div class="facts-container">
+            <div class="fact-text" id="game-over-fact"></div>
+        </div>
+    </div>
+
+    <div class="timer">
+        <svg viewBox="0 0 100 100">
+            <circle class="timer-circle-bg" cx="50" cy="50" r="45" />
+            <circle class="timer-circle-progress" cx="50" cy="50" r="45" stroke-dasharray="283" stroke-dashoffset="0" />
+        </svg>
+        <div class="timer-text">30</div>
+    </div>
+
+    <button class="temp-game-over-btn" onclick="triggerGameOver()">Test Game Over</button>
+
+    <svg class="game animated-container" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <defs>
+            <g class="shield-icon" transform="scale(0.09)">
+                <linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="218.973" x2="380.27" y1="158.336" y2="504.608">
+                    <stop offset="0" stop-color="#e3e5e4"/>
+                    <stop offset="1" stop-color="#cbd0e4"/>
+                </linearGradient>
+                <linearGradient id="lg1">
+                    <stop offset="0" stop-color="#ebeff0"/>
+                    <stop offset="1" stop-color="#e3e5e4"/>
+                </linearGradient>
+                <linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="207.043" x2="290.353" xlink:href="#lg1" y1="381.647" y2="464.957"/>
+                <linearGradient id="lg2">
+                    <stop offset="0" stop-color="#cbd0e4" stop-opacity="0"/>
+                    <stop offset="1" stop-color="#6a7d83"/>
+                </linearGradient>
+                <linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="255" x2="255" xlink:href="#lg2" y1="395.097" y2="480.645"/>
+                <linearGradient id="lg3">
+                    <stop offset="0" stop-color="#ff637b"/>
+                    <stop offset="1" stop-color="#f90217"/>
+                </linearGradient>
+                <linearGradient id="SVGID_4_" gradientUnits="userSpaceOnUse" x1="17.333" x2="58.022" xlink:href="#lg3" y1="255" y2="255"/>
+                <linearGradient id="SVGID_5_" gradientUnits="userSpaceOnUse" x1="419.959" x2="357.292" xlink:href="#lg2" y1="254.052" y2="188.052"/>
+                <linearGradient id="SVGID_6_" gradientUnits="userSpaceOnUse" x1="483.333" x2="514.667" xlink:href="#lg3" y1="255" y2="255"/>
+                <linearGradient id="lg4">
+                    <stop offset="0" stop-color="#f90217" stop-opacity="0"/>
+                    <stop offset=".2669" stop-color="#e7010f" stop-opacity=".267"/>
+                    <stop offset=".7232" stop-color="#ce0004" stop-opacity=".723"/>
+                    <stop offset="1" stop-color="#c50000"/>
+                </linearGradient>
+                <linearGradient id="SVGID_7_" gradientUnits="userSpaceOnUse" x1="500.767" x2="458.767" xlink:href="#lg4" y1="169.548" y2="122.048"/>
+                <linearGradient id="SVGID_8_" gradientTransform="matrix(-1 0 0 1 971.233 0)" gradientUnits="userSpaceOnUse" x1="962" x2="920" xlink:href="#lg4" y1="169.548" y2="122.048"/>
+                <linearGradient id="SVGID_9_" gradientUnits="userSpaceOnUse" x1="234.406" x2="346.189" xlink:href="#lg1" y1="54.061" y2="189.691"/>
+                <linearGradient id="SVGID_10_" gradientUnits="userSpaceOnUse" x1="261.026" x2="390.36" xlink:href="#lg3" y1="90.574" y2="308.574"/>
+                <g>
+                    <path d="m462.393 459.282h-414.786c-16.351 0-29.607-13.256-29.607-29.608l-18-349.349c0-16.352 13.256-29.607 29.607-29.607h450.785c16.352 0 29.607 13.256 29.607 29.607l-18 349.349c.001 16.352-13.255 29.608-29.606 29.608z" fill="url(#SVGID_1_)"/>
+                    <path d="m480.393 459.282h-450.786c-16.351 0-29.607-13.256-29.607-29.608 0-8.258 3.41-16.149 9.423-21.808l222.585-209.465c12.918-12.156 33.066-12.156 45.984 0l222.585 209.465c6.014 5.659 9.423 13.55 9.423 21.808 0 16.352-13.256 29.608-29.607 29.608z" fill="url(#SVGID_2_)"/>
+                    <path d="m4.235 352.963v76.711c0 16.352 13.036 29.607 29.116 29.607h443.298c16.08 0 29.116-13.256 29.116-29.607v-76.711z" fill="url(#SVGID_3_)"/>
+                    <path d="m0 80.326v349.349c0 16.352 13.256 29.607 29.607 29.607h19.16v-408.564h-19.16c-16.351 0-29.607 13.256-29.607 29.608z" fill="url(#SVGID_4_)"/>
+                    <path d="m10.423 102.133 381.577 357.149h88.393c16.352 0 29.607-13.256 29.607-29.607v-349.349c0-16.352-13.256-27.607-29.607-27.607h-450.786c-16.351-.001-28.607 11.255-28.607 27.607 0 8.257 3.41 16.148 9.423 21.807z" fill="url(#SVGID_5_)"/>
+                    <path d="m510 80.326v349.349c0 16.352-13.256 29.607-29.607 29.607h-19.16v-408.564h19.16c16.351 0 29.607 13.256 29.607 29.608z" fill="url(#SVGID_6_)"/>
+                    <path d="m480.393 52.718h-19.16v180.996h48.767v-151.388c0-16.352-13.256-29.608-29.607-29.608z" fill="url(#SVGID_7_)"/>
+                    <path d="m29.607 52.718h19.16v180.996h-48.767v-151.388c0-16.352 13.256-29.608 29.607-29.608z" fill="url(#SVGID_8_)"/>
+                    <path d="m480.393 50.718h-450.786c-16.351 0-29.607 13.256-29.607 29.608 0 8.258 3.41 13.149 9.423 18.808l222.585 209.465c12.918 12.156 33.066 12.156 45.984 0l222.585-209.466c6.013-5.659 9.423-10.55 9.423-18.807 0-16.352-13.256-29.608-29.607-29.608z" fill="url(#SVGID_9_)"/>
+                    <path d="m479.775 50.718c-1.179 0-2.313.45-3.171 1.257l-198.612 186.906c-12.918 12.156-33.066 12.156-45.984 0l-198.611-186.905c-.858-.808-1.993-1.258-3.171-1.258-15.107 0-28.248 11.079-30.018 26.082-1.121 9.503 2.351 18.873 9.216 25.333l222.585 209.465c12.918 12.156 33.066 12.156 45.984 0l222.585-209.465c6.865-6.461 10.337-15.83 9.216-25.333-1.771-15.003-14.912-26.082-30.019-26.082z" fill="url(#SVGID_10_)"/>
+                </g>
+            </g>
+            <g class="password-icon" transform="scale(0.09)">
+                <path style="fill:#FCBF29;" d="M463.624,48.374c-64.199-64.499-168.9-64.499-233.099,0c-44.101,43.801-59.401,108.602-40.201,167.401C122.525,283.275,72.001,333.8,4.501,401.6C1.5,404.299,0,408.199,0,412.099V497c0,4.199,1.5,7.798,4.501,10.499C7.2,510.499,10.8,512,15,512h84.901c3.9,0,7.8-1.501,10.499-4.501c7.8-7.5,13.5-13.5,21.301-21c3.3-3.3,4.799-7.8,4.2-12.299c-0.901-8.401-1.8-14.7-2.701-22.8c11.4-1.199,20.099-2.1,31.8-2.999c7.2-0.901,12.599-6.301,13.5-13.5c0.899-11.4,1.8-20.4,2.999-31.8c8.101,1.199,14.401,1.8,22.8,2.699c8.401,1.201,16.5-5.7,16.5-14.7V363H248.4c3.9,0,7.798-1,10.499-4.001c13.801-13.799,23.525-23.224,37.326-37.323c58.799,19.199,123.6,3.9,167.399-40.201C528.125,217.274,528.125,112.575,463.624,48.374z M421.325,154.275c-17.401,17.701-46.201,17.701-63.6,0c-17.701-17.401-17.701-46.199,0-63.6c17.399-17.701,46.199-17.701,63.6,0C439.024,108.076,439.024,136.875,421.325,154.275z"/>
+                <path style="fill:#FE9923;" d="M463.624,281.475c-43.799,44.101-108.6,59.399-167.399,40.201c-13.801,14.099-23.525,23.525-37.326,37.323c-2.7,3.001-6.598,4.001-10.498,4.001H220.8v28.099c0,9-8.099,15.901-16.5,14.7c-8.399-0.899-14.7-1.5-22.8-2.699c-1.199,11.4-2.1,20.4-2.999,31.8c-0.901,7.2-6.301,12.599-13.5,13.5c-11.7,0.899-20.4,1.8-31.8,2.999c0.901,8.101,1.8,14.399,2.701,22.8c0.599,4.499-0.901,9-4.2,12.299c-7.8,7.5-13.5,13.5-21.301,21c-2.699,2.999-6.599,4.501-10.499,4.501H15c-4.2,0-7.8-1.501-10.499-4.501l353.225-353.224c17.399,17.701,46.199,17.701,63.6,0c17.699-17.401,17.699-46.199,0-63.6l42.299-42.301C528.125,112.575,528.125,217.274,463.624,281.475z"/>
+            </g>
+            <g class="folder-icon" transform="scale(0.3)">
+                <g>
+                    <path d="m130.5 38.108v55.64l-36.75 36.75h-63.41c-15.38 0-27.84-12.46-27.84-27.84v-64.55z" fill="#f3f3f3"/>
+                    <path d="m130.5 93.751-36.75 36.75v-6.75c0-16.569 13.431-30 30-30z" fill="#c4c4c4"/>
+                    <g>
+                        <path d="m96.55 68.539h-60.104c-2.181 0-3.949-1.768-3.949-3.949 0-2.181 1.768-3.949 3.949-3.949h60.104c2.181 0 3.949 1.768 3.949 3.949 0 2.181-1.768 3.949-3.949 3.949z" fill="#9dcced"/>
+                    </g>
+                    <g>
+                        <path d="m96.55 88.753h-60.104c-2.181 0-3.949-1.768-3.949-3.949 0-2.181 1.768-3.949 3.949-3.949h60.104c2.181 0 3.949 1.768 3.949 3.949 0 2.181-1.768 3.949-3.949 3.949z" fill="#9dcced"/>
+                    </g>
+                    <path d="m93.75 130.501 36.75-36.75h-6.75c-9.391 0-17.77 4.317-23.271 11.072-1.004 1.232-1.907 2.548-2.707 3.931-2.553 4.413-4.022 9.532-4.022 14.997z" fill="#fdba21"/>
+                    <g>
+                        <path d="m76.55 108.967h-40.104c-2.181 0-3.949-1.768-3.949-3.949 0-2.181 1.768-3.949 3.949-3.949h40.104c2.181 0 3.949 1.768 3.949 3.949 0 2.181-1.768 3.949-3.949 3.949z" fill="#9dcced"/>
+                    </g>
+                    <path d="m130.5 30.338v8.77h-128v-8.77c0-15.37 12.46-27.84 27.84-27.84h72.32c15.38.001 27.84 12.47 27.84 27.84z" fill="#ccbb8b"/>
+                </g>
+            </g>
+            <radialGradient cx="60%" cy="80%" r="120%" fx="30%" fy="0%" id="Shadow" gradientUnits="userSpaceOnUse">
+                <stop offset="30%" stop-opacity="0" />
+                <stop offset="100%" stop-opacity=".5" />
+            </radialGradient>
+            <pattern id="BackgroundTile" x="50%" y="50%" width="60" height="60" patternUnits="userSpaceOnUse" stroke-width="4" fill="none">
+                <path fill="#0a0a1a" d="M0 0h60v60H0z" />
+                <path stroke="#1a1a3a" d="M0 60h60V0" />
+                <path stroke="#0d0d2a" d="M0 60V0h60" />
+            </pattern>
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="2" result="blur"/>
+                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+            </filter>
+            <filter id="pulse" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="1" result="blur">
+                    <animate attributeName="stdDeviation" values="1;2;1" dur="2s" repeatCount="indefinite"/>
+                </feGaussianBlur>
+                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+            </filter>
+            <linearGradient id="gridLines" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#4D99D3" stop-opacity="0.1" />
+                <stop offset="50%" stop-color="#1a237e" stop-opacity="0.05" />
+                <stop offset="100%" stop-color="#4D99D3" stop-opacity="0.1" />
+            </linearGradient>
+            <pattern id="TechGrid" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="url(#gridLines)" stroke-width="0.5" />
+            </pattern>
+            <g class="banking-information" transform="scale(0.08)">
+                <rect fill="#25a3da" height="380" rx="40" width="580" x="10" y="100"/>
+                <circle cx="470" cy="410" fill="#ec3a48" r="30"/>
+                <rect fill="#fccb55" height="100" rx="20" width="120" x="50" y="150"/>
+                <circle cx="520" cy="410" fill="#fccb55" r="30"/>
+                <g fill="#295474">
+                    <path d="m460 240a10 10 0 0 1 -6.48-17.61 15.09 15.09 0 0 0 0-24.78 10 10 0 0 1 13-15.22 35 35 0 0 1 0 55.22 9.91 9.91 0 0 1 -6.52 2.39z"/>
+                    <path d="m490 270a10 10 0 0 1 -7.29-16.84 62.51 62.51 0 0 0 0-86.32 10 10 0 1 1 14.58-13.68 82.49 82.49 0 0 1 0 113.68 10 10 0 0 1 -7.29 3.16z"/>
+                    <path d="m520 290a10 10 0 0 1 -7.06-17.09 86.66 86.66 0 0 0 0-125.82 10 10 0 0 1 14.12-14.18 106.68 106.68 0 0 1 0 154.18 10 10 0 0 1 -7.06 2.91z"/>
+                    <path d="m110 440h-50a10 10 0 0 1 0-20h50a10 10 0 0 1 0 20z"/>
+                    <path d="m140 340h-60a10 10 0 0 1 0-20h60a10 10 0 0 1 0 20z"/>
+                    <path d="m240 340h-60a10 10 0 0 1 0-20h60a10 10 0 0 1 0 20z"/>
+                    <path d="m340 340h-60a10 10 0 0 1 0-20h60a10 10 0 0 1 0 20z"/>
+                    <path d="m440 340h-60a10 10 0 0 1 0-20h60a10 10 0 0 1 0 20z"/>
+                    <path d="m200 440h-50a10 10 0 0 1 0-20h50a10 10 0 0 1 0 20z"/>
+                    <path d="m230 380h-40a10 10 0 0 1 0-20h40a10 10 0 0 1 0 20z"/>
+                    <path d="m280 380h-10a10 10 0 0 1 0-20h10a10 10 0 0 1 0 20z"/>
+                    <path d="m330 380h-10a10 10 0 0 1 0-20h10a10 10 0 0 1 0 20z"/>
+                </g>
+                <path d="m100 250v-30h70v-20h-30v-50h-20v50h-20v-50h-20v50h-30v20h30v30z" fill="#e2b550"/>
+            </g>
+        </defs>
+        <rect width="100%" height="100%" fill="#0a0a1a" />
+        <rect width="100%" height="100%" fill="url(#TechGrid)" />
+        <rect width="100%" height="100%" fill="url(#Shadow)" />
+        <g class="enemies"></g>
+    </svg>
+    <svg class="counter" overflow="visible" viewBox="0 0 100 100">
+        <text font-family="'Poppins', sans-serif" fill="white" stroke="black" stroke-width="3" x="50" y="79" font-size="81" text-anchor="middle" font-weight="bold">0</text>
+    </svg>
+    <audio id="bgMusic" loop>
+        <source src="assets/sfx/databreach-defender.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="health-bar">
+        <div class="health-fill"></div>
+    </div>
+
+    <div class="player-circle"></div>
+
+    <script>
+        // Audio setup
+        var splatSound = new Audio('assets/sfx/kill-gnat.mp3');
+        var dieSound = new Audio('assets/sfx/bugDie.mp3');
+        var fallSound = new Audio('assets/sfx/bugFall.mp3');
+        var damageTakenSound = new Audio('assets/sfx/damage-taken.mp3');
+        var gameOverSound = new Audio('assets/sfx/game-over.mp3');
+        var buttonStartSound = new Audio('assets/sfx/button-start.mp3');
+        var settingsPopSound = new Audio('assets/sfx/settings-pop.mp3');
+        var backgroundMusic = new Audio('assets/sfx/music.mp3');
+
+        // Set volume for all sounds to 50%
+        splatSound.volume = 0.5;
+        dieSound.volume = 0.5;
+        fallSound.volume = 0.5;
+        damageTakenSound.volume = 0.5;
+        gameOverSound.volume = 0.5;
+        buttonStartSound.volume = 0.5;
+        settingsPopSound.volume = 0.5;
+        backgroundMusic.volume = 0.5;
+
+        // Preload sounds
+        splatSound.load();
+        dieSound.load();
+        fallSound.load();
+        damageTakenSound.load();
+        gameOverSound.load();
+        buttonStartSound.load();
+        settingsPopSound.load();
+        backgroundMusic.load();
+
+        // Function to play button click sound
+        function playButtonSound() {
+            try {
+                buttonStartSound.currentTime = 0;
+                buttonStartSound.play();
+            } catch (e) {
+                console.error("Error playing button sound:", e);
+            }
+        }
+
+        // Function to play settings pop sound
+        function playSettingsPopSound() {
+            try {
+                settingsPopSound.currentTime = 0;
+                settingsPopSound.play();
+            } catch (e) {
+                console.error("Error playing settings pop sound:", e);
+            }
+        }
+
+        // Add click sound to all buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            // Only add sound to main action buttons
+            const mainButtons = document.querySelectorAll('.menu-button, .mode-button, .settings-button');
+            mainButtons.forEach(button => {
+                button.addEventListener('click', playButtonSound);
+            });
+
+            // Add settings pop sound to settings icon
+            const settingsIcon = document.querySelector('.settings-icon');
+            if (settingsIcon) {
+                settingsIcon.addEventListener('click', playSettingsPopSound);
+            }
+        });
+
+        // Game variables
+        var index = 0;
+        var gnatTemplate = document.querySelector(".gnat");
+        var enemies = document.querySelector(".enemies");
+        var gnats = [];
+        var swatThreshold = 65; // Increased from 45 to 65 to make the game even easier
+        var swatCount = 0;
+        var gameTimer;
+        var timeLeft = 30;
+        var highScores = JSON.parse(localStorage.getItem('databreachDefenderHighScores')) || [];
+        var particles = [];
+        var lastTapTime = 0;
+        var tapCooldown = 0; // Removed delay completely (was 150ms)
+        var debugMode = false; // Set to false to turn off debug mode
+        var hitAreaIndicator = null; // For debugging hit areas
+        var hitAreaTimeout = null; // For managing hit area indicator timeout
+        var gnatHighlightContainer = null; // Container for all gnat highlights
+        var gnatHitRadius = 30; // Increased from 25 to 30 to make gnats easier to hit
+        var showMouseHitbox = false; // New variable to control mouse hitbox visibility
+        var mouseHitboxIndicator = null; // For showing mouse hitbox
+        var mouseHitboxInterval = null; // For managing mouse hitbox updates
+        var lastHighlightUpdate = 0; // For throttling highlight updates
+
+        // Array of cybersecurity facts
+        const cybersecurityFacts = [
+            "In 2024, the average cost of a data breach reached $4.45 million globally.",
+            "Over 80% of data breaches involve human error or social engineering.",
+            "Ransomware attacks increased by 37% in 2024 compared to the previous year.",
+            "The healthcare sector experienced the highest average cost of data breaches in 2024 at $10.93 million per incident.",
+            "AI-powered cyber attacks have become 300% more sophisticated since 2024.",
+            "Cloud security incidents have risen by 45% in 2024 due to misconfigurations.",
+            "The average time to identify and contain a data breach in 2024 is 287 days.",
+            "Supply chain attacks increased by 78% in 2024, affecting multiple organizations through a single breach.",
+            "Zero-day vulnerabilities discovered in 2024 reached an all-time high of 1,200.",
+            "Mobile device breaches increased by 50% in 2024, with most targeting corporate data.",
+            "The financial impact of data breaches in 2024 is expected to exceed $6 trillion globally.",
+            "Remote work has led to a 67% increase in phishing attacks since 2024.",
+            "The average ransom payment in 2024 reached $570,000, up 82% from the previous year.",
+            "Critical infrastructure attacks have increased by 40% in 2024, targeting energy and healthcare sectors.",
+            "The number of exposed records in 2024 has already surpassed 5 billion.",
+            "Identity theft cases related to data breaches increased by 35% in 2024.",
+            "The average cost per lost or stolen record containing sensitive information is $165 in 2024.",
+            "Organizations that fully deploy security AI and automation save an average of $3.81 million per breach in 2024.",
+            "The most common attack vector in 2024 is compromised credentials, accounting for 19% of breaches.",
+            "Data breaches in the retail sector increased by 25% in 2024, with payment card data being the primary target."
+        ];
+
+        // Function to display random facts
+        function displayRandomFact() {
+            const menuFact = document.getElementById('menu-fact');
+            const gameOverFact = document.getElementById('game-over-fact');
+            
+            if (menuFact && document.querySelector('.menu-screen').style.display !== 'none') {
+                const randomFact = cybersecurityFacts[Math.floor(Math.random() * cybersecurityFacts.length)];
+                menuFact.textContent = randomFact;
+                document.querySelector('.menu-screen .facts-container').classList.add('show');
+            }
+            
+            if (gameOverFact && document.querySelector('.game-over-screen').style.display !== 'none') {
+                const randomFact = cybersecurityFacts[Math.floor(Math.random() * cybersecurityFacts.length)];
+                gameOverFact.textContent = randomFact;
+                document.querySelector('.game-over-screen .facts-container').classList.add('show');
+            }
+        }
+
+        // Function to cycle through facts
+        function cycleFacts() {
+            // Hide current fact
+            document.querySelectorAll('.facts-container').forEach(container => {
+                container.classList.remove('show');
+            });
+            
+            // Wait for fade out, then show new fact
+            setTimeout(() => {
+                displayRandomFact();
+            }, 1000);
+        }
+
+        // Initialize facts display
+        function initFacts() {
+            displayRandomFact();
+            setInterval(cycleFacts, 8000); // Change fact every 8 seconds
+        }
+
+        // Create particle effect
+        function createParticle(x, y, color) {
+            var particle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            particle.setAttribute("r", Math.random() * 2 + 1);
+            particle.setAttribute("fill", color || "#4D99D3");
+            particle.setAttribute("filter", "url(#glow)");
+            
+            enemies.appendChild(particle);
+            
+            var particleObj = {
+                element: particle,
+                x: x,
+                y: y,
+                vx: (Math.random() - 0.5) * 5,
+                vy: (Math.random() - 0.5) * 5,
+                life: 1
+            };
+            
+            particles.push(particleObj);
+            
+            TweenMax.to(particleObj, 0.5, {
+                life: 0,
+                ease: Power1.easeOut,
+                onUpdate: function() {
+                    particleObj.x += particleObj.vx;
+                    particleObj.y += particleObj.vy;
+                    particleObj.vy += 0.5; // gravity
+                    TweenMax.set(particle, {
+                        x: particleObj.x,
+                        y: particleObj.y,
+                        opacity: particleObj.life
+                    });
+                },
+                onComplete: function() {
+                    enemies.removeChild(particle);
+                    particles.splice(particles.indexOf(particleObj), 1);
+                }
+            });
+        }
+
+        // Create data stream effect
+        function createDataStream() {
+            if (document.querySelector('.game').style.display === 'none') return;
+            
+            var stream = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            var startX = Math.random() * window.innerWidth;
+            var startY = -20;
+            var endX = startX + (Math.random() - 0.5) * 200;
+            var endY = window.innerHeight + 20;
+            
+            var path = `M ${startX} ${startY} Q ${(startX + endX) / 2} ${(startY + endY) / 2} ${endX} ${endY}`;
+            
+            stream.setAttribute("d", path);
+            stream.setAttribute("stroke", "#4D99D3");
+            stream.setAttribute("stroke-width", "1");
+            stream.setAttribute("fill", "none");
+            stream.setAttribute("opacity", "0.3");
+            stream.setAttribute("filter", "url(#pulse)");
+            
+            enemies.appendChild(stream);
+            
+            var dashArray = "5,10";
+            stream.setAttribute("stroke-dasharray", dashArray);
+            
+            TweenMax.to(stream, 3, {
+                strokeDashoffset: -100,
+                ease: Linear.easeNone,
+                onComplete: function() {
+                    enemies.removeChild(stream);
+                }
+            });
+            
+            // Create particles along the path
+            var interval = setInterval(function() {
+                if (!stream.parentNode) {
+                    clearInterval(interval);
+                    return;
+                }
+                
+                var t = Math.random();
+                var x = startX + (endX - startX) * t;
+                var y = startY + (endY - startY) * t;
+                
+                createParticle(x, y, "#4D99D3");
+            }, 100);
+            
+            setTimeout(function() {
+                clearInterval(interval);
+            }, 3000);
+        }
+
+        // Create a visual indicator for hit areas (for debugging)
+        function createHitAreaIndicator() {
+            if (!debugMode) return;
+            
+            // Clear any existing timeout
+            if (hitAreaTimeout) {
+                clearTimeout(hitAreaTimeout);
+                hitAreaTimeout = null;
+            }
+            
+            // Remove any existing hit area indicator
+            removeHitAreaIndicator();
+            
+            hitAreaIndicator = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            hitAreaIndicator.setAttribute("r", swatThreshold);
+            hitAreaIndicator.setAttribute("fill", "rgba(255, 0, 0, 0.3)");
+            hitAreaIndicator.setAttribute("stroke", "red");
+            hitAreaIndicator.setAttribute("stroke-width", "2");
+            hitAreaIndicator.setAttribute("opacity", "1");
+            hitAreaIndicator.setAttribute("z-index", "1000");
+            enemies.appendChild(hitAreaIndicator);
+        }
+
+        // Update hit area indicator position
+        function updateHitAreaIndicator(x, y) {
+            if (!debugMode || !hitAreaIndicator) return;
+            
+            TweenMax.set(hitAreaIndicator, {
+                x: x,
+                y: y
+            });
+        }
+
+        // Remove hit area indicator
+        function removeHitAreaIndicator() {
+            if (!debugMode) return;
+            
+            if (hitAreaIndicator && hitAreaIndicator.parentNode) {
+                enemies.removeChild(hitAreaIndicator);
+            }
+            hitAreaIndicator = null;
+        }
+
+        // Function to highlight gnats in debug mode
+        function highlightGnats() {
+            // Create a container for all highlights if it doesn't exist
+            if (!gnatHighlightContainer) {
+                gnatHighlightContainer = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                gnatHighlightContainer.setAttribute("class", "gnat-highlights");
+                enemies.appendChild(gnatHighlightContainer);
+            }
+            
+            // Clear existing highlights
+            gnatHighlightContainer.innerHTML = '';
+            
+            // Create highlights for each gnat
+            for (var i = 0; i < gnats.length; i++) {
+                var gnatObject = gnats[i];
+                if (gnatObject && gnatObject.alive) {
+                    var highlight = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    highlight.setAttribute("class", "gnat-highlight");
+                    highlight.setAttribute("data-gnat-index", i);
+                    highlight.setAttribute("r", gnatHitRadius);
+                    highlight.setAttribute("fill", "rgba(0, 255, 0, 0.2)");
+                    highlight.setAttribute("stroke", "lime");
+                    highlight.setAttribute("stroke-width", "2");
+                    highlight.setAttribute("cx", gnatObject.x);
+                    highlight.setAttribute("cy", gnatObject.y);
+                    
+                    gnatHighlightContainer.appendChild(highlight);
+                }
+            }
+        }
+        
+        // Function to remove gnat highlights
+        function removeGnatHighlights() {
+            if (gnatHighlightContainer && gnatHighlightContainer.parentNode) {
+                gnatHighlightContainer.parentNode.removeChild(gnatHighlightContainer);
+                gnatHighlightContainer = null;
+            }
+        }
+        
+        // Function to update gnat highlights with throttling
+        function updateGnatHighlights(timestamp) {
+            // Throttle updates to every 100ms to improve performance
+            if (timestamp - lastHighlightUpdate < 100) {
+                requestAnimationFrame(updateGnatHighlights);
+                return;
+            }
+            
+            lastHighlightUpdate = timestamp;
+            
+            // Only update if debug mode is active
+            if (debugMode) {
+                highlightGnats();
+                requestAnimationFrame(updateGnatHighlights);
+            }
+        }
+
+        // Touch event handling
+        function handleTouch(e) {
+            e.preventDefault();
+            
+            // Get touch coordinates immediately
+            var touch = e.touches[0] || e.changedTouches[0];
+            var x = touch.clientX;
+            var y = touch.clientY;
+            
+            // Process click immediately without cooldown check
+            if (gnats.length > 0) {
+                checkPoint(x, y);
+            }
+        }
+
+        // Add touch event listeners with passive: false for better performance
+        document.querySelector('.game').addEventListener('touchstart', handleTouch, { passive: false });
+        document.querySelector('.game').addEventListener('click', function(e) {
+            if (gnats.length > 0) {
+                checkPoint(e.clientX, e.clientY);
+            }
+        });
+
+        function getPath() {
+            // Generate a completely random path for each gnat
+            var numPoints = 8;
+            var points = [];
+            
+            // Random starting position
+            var startX = Math.random() < 0.5 ? -20 : window.innerWidth + 20;
+            var startY = Math.random() < 0.5 ? -20 : window.innerHeight + 20;
+            points.push({x: startX, y: startY});
+            
+            // Generate random points within the screen
+            for (var i = 0; i < numPoints; i++) {
+                var x = Math.random() * window.innerWidth;
+                var y = Math.random() * window.innerHeight;
+                points.push({x: x, y: y});
+            }
+            
+            // Random ending position
+            var endX = Math.random() < 0.5 ? -20 : window.innerWidth + 20;
+            var endY = Math.random() < 0.5 ? -20 : window.innerHeight + 20;
+            points.push({x: endX, y: endY});
+            
+            return points;
+        }
+
+        function buzz(gnatObject) {
+            if (gnatObject) {
+                var gnatElement = gnatObject.element;
+                var flap = Math.random();
+                TweenMax.set(gnatElement.querySelector(".wing1"), {
+                    autoAlpha: flap > 0.5 ? 0 : 1
+                });
+                TweenMax.set(gnatElement.querySelector(".wing2"), {
+                    autoAlpha: flap > 0.5 ? 1 : 0
+                });
+                TweenMax.set(gnatObject, {
+                    x: gnatObject.x,
+                    y: gnatObject.y
+                });
+            }
+        }
+
+        function createGnats(numGnats) {
+            // Create each gnat with its own random path
+            for (var i = 0; i < numGnats; i++) {
+                var path = getPath(); // Get a unique random path for each gnat
+                var gnat = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                gnat.setAttribute("class", "gnat");
+                
+                // Define icon types with their probabilities
+                var iconTypes = [
+                    { type: '.shield-icon', weight: 40 },
+                    { type: '.password-icon', weight: 15 },
+                    { type: '.folder-icon', weight: 35 },
+                    { type: '.banking-information', weight: 3 }
+                ];
+                
+                // Calculate total weight
+                var totalWeight = iconTypes.reduce((sum, icon) => sum + icon.weight, 0);
+                
+                // Generate random number based on total weight
+                var random = Math.random() * totalWeight;
+                
+                // Select icon based on weight
+                var selectedIcon = iconTypes[0];
+                var currentWeight = 0;
+                for (var icon of iconTypes) {
+                    currentWeight += icon.weight;
+                    if (random <= currentWeight) {
+                        selectedIcon = icon;
+                        break;
+                    }
+                }
+                
+                var iconType = selectedIcon.type;
+                
+                var iconTemplate = document.querySelector(iconType);
+                if (!iconTemplate) continue;
+                
+                var iconClone = iconTemplate.cloneNode(true);
+                gnat.appendChild(iconClone);
+                gnat.setAttribute('data-type', iconType);
+                gnat.setAttribute("filter", "url(#glow)");
+                
+                enemies.appendChild(gnat);
+                
+                var gnatObject = {
+                    element: gnat,
+                    x: path[0].x,
+                    y: path[0].y,
+                    alive: true,
+                    type: iconType
+                };
+                
+                gnats.push(gnatObject);
+                
+                TweenMax.set(gnat, {
+                    x: path[0].x,
+                    y: path[0].y,
+                    transformOrigin: "50% 50%"
+                });
+                
+                // Get the speed for this specific gnat type and ensure it's a number
+                const duration = parseFloat(gnatSpeeds[iconType]) || 10;
+                console.log(`Creating ${iconType} with speed: ${duration}`); // Debug log
+                
+                // Create a separate tween for each gnat with its own path
+                TweenMax.to(gnatObject, duration, {
+                    delay: i * 0.2,  // Staggered spawn delay
+                    bezier: {
+                        type: "thru",
+                        values: path,
+                        curviness: 1.5,
+                    },
+                    ease: Linear.easeNone,
+                    onUpdate: function(gnatObj) {
+                        return function() {
+                            if (gnatObj.alive) {
+                                TweenMax.set(gnatObj.element, {
+                                    x: gnatObj.x,
+                                    y: gnatObj.y
+                                });
+                            }
+                        };
+                    }(gnatObject),
+                    onComplete: function(gnatObj) {
+                        return function() {
+                            if (gnatObj.alive) {
+                                removeGnat(gnatObj);
+                            }
+                        };
+                    }(gnatObject)
+                });
+            }
+        }
+
+        function removeGnat(gnatObject) {
+            // kill gnats
+            if (gnatObject) {
+                // Kill all tweens
+                TweenMax.killTweensOf(gnatObject);
+                TweenMax.killTweensOf(gnatObject.element);
+                TweenMax.killChildTweensOf(gnatObject.element);
+                
+                // Remove from DOM if still present
+                if (gnatObject.element && gnatObject.element.parentNode) {
+                enemies.removeChild(gnatObject.element);
+                }
+                
+                // Clear reference
+                gnatObject = null;
+            }
+        }
+
+        // Add a more aggressive cleanup function to periodically check for and remove orphaned gnats
+        function cleanupOrphanedGnats() {
+            console.log("Running cleanup of orphaned gnats. Current count:", gnats.length);
+            
+            // First, check for gnats that are no longer in the DOM
+            for (var i = gnats.length - 1; i >= 0; i--) {
+                var gnatObject = gnats[i];
+                
+                // Check for null or undefined gnats
+                if (!gnatObject) {
+                    console.log("Found null gnat at index", i);
+                    gnats.splice(i, 1);
+                    continue;
+                }
+                
+                // Check for gnats without elements
+                if (!gnatObject.element) {
+                    console.log("Found gnat without element at index", i);
+                    gnats.splice(i, 1);
+                    continue;
+                }
+                
+                // Check for gnats with elements not in the DOM
+                if (!gnatObject.element.parentNode) {
+                    console.log("Found gnat with element not in DOM at index", i);
+                    gnats.splice(i, 1);
+                    continue;
+                }
+                
+                // Check if the gnat is outside the visible area
+                var rect = gnatObject.element.getBoundingClientRect();
+                if (rect.right < -100 || rect.left > window.innerWidth + 100 || 
+                    rect.bottom < -100 || rect.top > window.innerHeight + 100) {
+                    console.log("Found gnat outside visible area at index", i);
+                    // Gnat is far outside the visible area, remove it
+                    if (gnatObject.element && gnatObject.element.parentNode) {
+                        try {
+                            enemies.removeChild(gnatObject.element);
+                        } catch (e) {
+                            console.error("Error removing gnat element:", e);
+                        }
+                    }
+                    gnats.splice(i, 1);
+                    continue;
+                }
+                
+                // Check if the gnat is marked as not alive
+                if (!gnatObject.alive) {
+                    console.log("Found dead gnat at index", i);
+                    // Remove from array
+                    gnats.splice(i, 1);
+                    
+                    // Also remove from DOM if it still exists
+                    if (gnatObject.element && gnatObject.element.parentNode) {
+                        try {
+                            enemies.removeChild(gnatObject.element);
+                        } catch (e) {
+                            console.error("Error removing gnat element:", e);
+                        }
+                    }
+                }
+            }
+            
+            console.log("Cleanup complete. Remaining gnats:", gnats.length);
+            
+            // Update gnat highlights after cleanup
+            if (debugMode) {
+                updateGnatHighlights();
+            }
+        }
+
+        // Add new variables for survival mode
+        let gameMode = 'attack';
+        let playerHealth = 100;
+        let playerCircle = null;
+        let isPlayerAlive = true;
+
+        // Modify startGame function to handle both modes
+        function startGame(mode) {
+            gameMode = mode;
+            
+            // Show instruction screen
+            document.querySelector('.menu-screen').style.display = 'none';
+            document.querySelector('.instruction-screen').style.display = 'flex';
+            
+            // Update instruction text based on mode
+            const instructionText = document.getElementById('mode-instruction');
+            if (mode === 'attack') {
+                instructionText.textContent = 'Your job is to catch as many breaches as you can before the timer runs out. Can you get the high score?';
+            } else {
+                instructionText.textContent = 'Dodge the incoming threats and survive! Each hit reduces your health by 25%. Stay alive as long as you can!';
+            }
+            
+            // Animate instruction screen
+            setTimeout(() => {
+                document.querySelector('.instruction-screen').classList.add('show');
+                setTimeout(() => {
+                    document.querySelector('.instruction-content').classList.add('show');
+                }, 300);
+            }, 100);
+        }
+
+        // Modify startGameForReal function
+        function startGameForReal() {
+            // Reset game state
+            playerHealth = 100;
+            isPlayerAlive = true;
+            
+            // Reset timer color to blue
+            document.querySelector('.timer-text').style.color = '#4D99D3';
+            
+            // Start background music
+            try {
+                backgroundMusic.currentTime = 0; // Reset music to start
+                backgroundMusic.play().catch(function(error) {
+                    console.log("Music autoplay prevented by browser. Click anywhere to start music.");
+                    document.addEventListener('click', function startMusicOnClick() {
+                        backgroundMusic.play();
+                        document.removeEventListener('click', startMusicOnClick);
+                    }, { once: true });
+                });
+            } catch (e) {
+                console.error("Error playing background music:", e);
+            }
+            
+            // Remove combo reset
+            // currentCombo = 0;
+            // totalBonusPoints = 0;
+            
+            // Hide instruction screen
+            document.querySelector('.instruction-screen').classList.remove('show');
+            document.querySelector('.instruction-content').classList.remove('show');
+            
+            setTimeout(() => {
+                document.querySelector('.instruction-screen').style.display = 'none';
+                
+                // Clear any existing gnats and animations
+                TweenMax.killAll();
+                enemies.innerHTML = '';
+                gnats = [];
+                particles = [];
+                
+                // Remove any hit area indicators
+                removeHitAreaIndicator();
+                removeGnatHighlights();
+                
+                document.querySelector('.game').style.display = 'block';
+                document.querySelector('.game-over-screen').style.display = 'none';
+                
+                if (gameMode === 'attack') {
+                    // Attack mode setup
+                    document.querySelector('.timer').style.display = 'block';
+                    document.querySelector('.counter').style.display = 'block';
+                    document.querySelector('.health-bar').style.display = 'none';
+                    document.querySelector('.player-circle').style.display = 'none';
+                    document.body.style.cursor = 'default';
+                    // Show combo indicator in attack mode
+                    // comboIndicator.style.display = 'block';
+                } else {
+                    // Survival mode setup
+                    document.querySelector('.timer').style.display = 'none';
+                    document.querySelector('.counter').style.display = 'none';
+                    document.querySelector('.health-bar').style.display = 'block';
+                    document.querySelector('.player-circle').style.display = 'block';
+                    document.body.style.cursor = 'none';
+                    // Hide combo indicator in survival mode
+                    // comboIndicator.style.display = 'none';
+                }
+                
+                swatCount = 0;
+                timeLeft = 30;
+                
+                if (gameMode === 'attack') {
+            document.querySelector('.timer-text').textContent = timeLeft;
+            document.querySelector('.timer-circle-progress').style.strokeDashoffset = '0';
+            
+                    // Start the game timer for attack mode
+            gameTimer = setInterval(function() {
+                timeLeft--;
+                document.querySelector('.timer-text').textContent = timeLeft;
+                var progress = (timeLeft / 30) * 283;
+                document.querySelector('.timer-circle-progress').style.strokeDashoffset = (283 - progress) + 'px';
+                        
+                        if (timeLeft <= 5) {
+                            document.querySelector('.timer-circle-progress').style.stroke = '#ff4444';
+                            document.querySelector('.timer-text').style.color = '#ff4444';
+                        }
+                
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+                }
+                
+                // Update score display
+                updateScore();
+
+            // Start emitting gnats
+            emitGnats();
+                
+                // Start data stream effect
+                setInterval(createDataStream, 2000);
+                
+                // Start periodic cleanup
+                setInterval(cleanupOrphanedGnats, 100);
+                
+                // Start debug features if enabled
+                if (debugMode) {
+                    requestAnimationFrame(updateGnatHighlights);
+                }
+            }, 500);
+        }
+
+        function endGame() {
+            // Stop background music
+            try {
+                backgroundMusic.pause();
+                backgroundMusic.currentTime = 0;
+            } catch (e) {
+                console.error("Error stopping background music:", e);
+            }
+
+            // Play game over sound
+            try {
+                gameOverSound.currentTime = 0;
+                gameOverSound.play();
+            } catch (e) {
+                console.error("Error playing game over sound:", e);
+            }
+
+            // Clear all intervals and animations
+            clearInterval(gameTimer);
+            TweenMax.killAll();
+            enemies.innerHTML = '';
+            gnats = [];
+            particles = [];
+            
+            // Remove any hit area indicators
+            removeHitAreaIndicator();
+            removeGnatHighlights();
+            
+            // Ensure cursor is visible when game ends
+            document.body.style.cursor = 'default';
+            
+            document.querySelector('.game').style.display = 'none';
+            document.querySelector('.timer').style.display = 'none';
+            document.querySelector('.counter').style.display = 'none';
+            document.querySelector('.game-over-screen').style.display = 'flex';
+            
+            // Show game over screen with animation
+            setTimeout(() => {
+                document.querySelector('.game-over-screen').classList.add('show');
+                setTimeout(() => {
+                    document.querySelector('.game-over-content').classList.add('show');
+                    // Update leaderboard display
+                    updateLeaderboardDisplay();
+                    // Show facts on game over screen
+                    const gameOverFact = document.getElementById('game-over-fact');
+                    if (gameOverFact) {
+                        const randomFact = cybersecurityFacts[Math.floor(Math.random() * cybersecurityFacts.length)];
+                        gameOverFact.textContent = randomFact;
+                        document.querySelector('.game-over-screen .facts-container').classList.add('show');
+                    }
+                }, 300);
+            }, 100);
+            
+            // Update final score displays
+            document.querySelector('.final-score').textContent = swatCount;
+            document.getElementById('high-score').textContent = swatCount;
+        }
+
+        function updateLeaderboardDisplay() {
+            // Update both leaderboards
+            updateLeaderboardTable('leaderboard-body');
+            updateLeaderboardTable('game-over-leaderboard-body');
+        }
+
+        function updateLeaderboardTable(tableId) {
+            const leaderboardBody = document.getElementById(tableId);
+            if (!leaderboardBody) return;
+            
+            leaderboardBody.innerHTML = '';
+            
+            // Sort high scores in descending order
+            const sortedScores = [...highScores].sort((a, b) => b.score - a.score);
+            
+            // Display top 10 scores
+            sortedScores.slice(0, 10).forEach((score, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="rank">${index + 1}</td>
+                    <td>${score.name}</td>
+                    <td class="score">${score.score}</td>
+                `;
+                leaderboardBody.appendChild(row);
+            });
+        }
+
+        function submitScore() {
+            var name = document.querySelector('.name-input').value.trim();
+            if (name) {
+                var score = {
+                    name: name,
+                    score: swatCount,
+                    date: new Date().toLocaleDateString()
+                };
+                
+                // Add score with animation
+                var scoreElement = document.createElement('div');
+                scoreElement.className = 'score-entry';
+                scoreElement.innerHTML = `
+                    <span class="score-name">${name}</span>
+                    <span class="score-value">${swatCount}</span>
+                    <span class="score-date">${score.date}</span>
+                `;
+                
+                // Animate the score entry
+                TweenMax.from(scoreElement, 0.5, {
+                    opacity: 0,
+                    y: 50,
+                    ease: Back.easeOut
+                });
+                
+                highScores.push(score);
+                highScores.sort((a, b) => b.score - a.score);
+                highScores = highScores.slice(0, 10);
+                localStorage.setItem('databreachDefenderHighScores', JSON.stringify(highScores));
+                updateLeaderboardDisplay();
+                
+                // Return to menu with animation
+                document.querySelector('.game-over-screen').classList.remove('show');
+                document.querySelector('.game-over-content').classList.remove('show');
+                setTimeout(() => {
+                    document.querySelector('.game-over-screen').style.display = 'none';
+                    document.querySelector('.menu-screen').style.display = 'flex';
+                }, 500);
+            }
+        }
+
+        function returnToMenu() {
+            // Return to menu with animation
+            document.querySelector('.game-over-screen').classList.remove('show');
+            document.querySelector('.game-over-content').classList.remove('show');
+            document.querySelector('.game-over-screen .facts-container').classList.remove('show');
+            
+            // Ensure cursor is visible when returning to menu
+            document.body.style.cursor = 'default';
+            
+            setTimeout(() => {
+                document.querySelector('.game-over-screen').style.display = 'none';
+                document.querySelector('.menu-screen').style.display = 'flex';
+                
+                // Reset menu content position
+                document.querySelector('.menu-content').classList.remove('show');
+                
+                // Show menu content with animation
+                setTimeout(() => {
+                    document.querySelector('.menu-content').classList.add('show');
+                    document.querySelector('.menu-screen .facts-container').classList.add('show');
+                }, 100);
+            }, 500);
+        }
+
+        // Update leaderboard when the page loads
+        updateLeaderboardDisplay();
+
+        function emitGnats() {
+            if (document.querySelector('.game').style.display !== 'none') {
+                // Create more gnats at a time (3-5 instead of 2-4)
+                createGnats(parseInt(Math.random() * 3) + 3);
+                // Decrease delay between spawns (from 1.5 to 1.2 seconds)
+                TweenMax.delayedCall(1.2, emitGnats);
+            }
+        }
+
+        // Function to kill a gnat - handles all aspects of the kill process
+        function killGnat(gnatObject) {
+            // Early validation
+            if (!gnatObject || !gnatObject.alive) {
+                return false;
+            }
+
+            // Mark as dead immediately to prevent multiple hits
+            gnatObject.alive = false;
+            
+            // Play sound effects
+            try {
+                splatSound.currentTime = 0;
+                splatSound.play();
+            } catch (e) {
+                console.error("Error playing splat sound:", e);
+            }
+            
+            // Remove from gnats array
+            const index = gnats.indexOf(gnatObject);
+            if (index !== -1) {
+                gnats.splice(index, 1);
+            }
+            
+            // Get the element and validate it
+            const gnatElement = gnatObject.element;
+            if (!gnatElement || !gnatElement.parentNode) {
+                return false;
+            }
+            
+            // Create death animation
+            TweenMax.to(gnatElement, 0.15, {
+                scale: 1.5,
+                opacity: 0.7,
+                ease: Power1.easeOut,
+                onComplete: function() {
+                    // Create particle explosion
+                    for (let i = 0; i < 8; i++) {
+                        createParticle(gnatObject.x, gnatObject.y, "#4D99D3");
+                    }
+                    
+                    // Final animation
+                    TweenMax.to(gnatElement, 0.1, {
+                        scale: 0.1,
+                        opacity: 0,
+                        rotation: Math.random() * 360,
+                        ease: Power1.easeIn,
+                        onComplete: function() {
+                            // Remove from DOM
+                            if (gnatElement && gnatElement.parentNode) {
+                                gnatElement.parentNode.removeChild(gnatElement);
+                            }
+                        }
+                    });
+                }
+            });
+            
+            return true;
+        }
+
+        function checkPoint(x, y) {
+            // Early exit if no gnats
+            if (gnats.length === 0) return;
+            
+            // Find the closest gnat to the click
+            let closestGnat = null;
+            let closestDistance = Infinity;
+            
+            // Use a more efficient loop and distance calculation
+            for (let i = 0; i < gnats.length; i++) {
+                const gnat = gnats[i];
+                if (!gnat || !gnat.alive) continue;
+                
+                // Calculate squared distance (faster than square root)
+                const dx = gnat.x - x;
+                const dy = gnat.y - y;
+                const distanceSquared = dx * dx + dy * dy;
+                
+                // Update closest gnat if this one is closer
+                if (distanceSquared < closestDistance) {
+                    closestDistance = distanceSquared;
+                    closestGnat = gnat;
+                }
+            }
+            
+            // Check if we found a gnat and if it's within the hit threshold
+            if (closestGnat && closestDistance < swatThreshold * swatThreshold) {
+                // Determine points based on icon type
+                let points = 1; // Default points for shield and folder
+                
+                if (closestGnat.element.querySelector('.password-icon')) {
+                    points = 2; // Password is worth 2 points
+                } else if (closestGnat.element.querySelector('.banking-information')) {
+                    points = 3; // Banking information is worth 3 points
+                }
+                
+                // Add points to score
+                swatCount += points;
+                
+                // Use the killGnat function to handle the removal
+                killGnat(closestGnat);
+                
+                // Update score display
+                updateScore();
+            }
+        }
+
+        function updateScore() {
+            // Update all score displays
+            document.getElementById('current-score').textContent = swatCount;
+            TweenMax.set(".counter text", {
+                textContent: swatCount
+            });
+        }
+
+        function deleteElement(element) {
+            fallSound = new Audio('https://dl.dropboxusercontent.com/u/1256960/GnatAttack/bugFall.mp3');
+            fallSound.play();
+            if (element && element.parentNode) {
+            enemies.removeChild(element);
+        }
+        }
+
+        function triggerGameOver() {
+            swatCount = Math.floor(Math.random() * 100) + 50; // Random score between 50-150
+            updateScore();
+            endGame();
+        }
+
+        // Add this at the end of the script
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ensure cursor is visible on the main menu
+            document.body.style.cursor = 'default';
+            
+            // Show menu content with animation
+            setTimeout(() => {
+                document.querySelector('.menu-content').classList.add('show');
+            }, 300);
+            
+            // Initialize facts display
+            initFacts();
+            
+            // Initialize debug toggle state
+            updateDebugToggleState();
+            
+            // Initialize performance monitor toggle state
+            const perfToggle = document.querySelectorAll('.settings-toggle')[2];
+            if (perfToggle) {
+                if (showPerformanceMonitor) {
+                    perfToggle.classList.add('active');
+                } else {
+                    perfToggle.classList.remove('active');
+                }
+            }
+            
+            // Initialize hitbox visualization toggle state
+            const hitboxToggle = document.querySelectorAll('.settings-toggle')[3];
+            if (hitboxToggle) {
+                if (showHitboxes) {
+                    hitboxToggle.classList.add('active');
+                } else {
+                    hitboxToggle.classList.remove('active');
+                }
+            }
+        });
+        
+        // Function to toggle debug mode
+        function toggleDebugMode() {
+            debugMode = !debugMode;
+            updateDebugToggleState();
+            
+            // Show notification
+            showNotification(debugMode ? 'Debug Mode: ON' : 'Debug Mode: OFF', 
+                            debugMode ? 'rgba(77, 153, 211, 0.9)' : 'rgba(255, 255, 255, 0.9)');
+            
+            // Start or stop the gnat highlight animation
+            if (debugMode) {
+                // Start the animation frame loop for gnat highlights
+                requestAnimationFrame(updateGnatHighlights);
+            } else {
+                // Remove all highlights when debug mode is turned off
+                removeGnatHighlights();
+            }
+        }
+        
+        // Function to update the debug toggle UI
+        function updateDebugToggleState() {
+            const toggles = document.querySelectorAll('.settings-toggle');
+            const debugToggle = toggles[0]; // First toggle is for debug mode
+            
+            if (debugMode) {
+                debugToggle.classList.add('active');
+            } else {
+                debugToggle.classList.remove('active');
+            }
+        }
+        
+        // Function to toggle settings menu
+        function toggleSettingsMenu() {
+            const settingsMenu = document.querySelector('.settings-menu');
+            settingsMenu.classList.toggle('active');
+            
+            // Play settings pop sound
+            try {
+                settingsPopSound.currentTime = 0;
+                settingsPopSound.play();
+            } catch (e) {
+                console.error("Error playing settings pop sound:", e);
+            }
+        }
+        
+        // Settings menu functionality
+        const settingsIcon = document.querySelector('.settings-icon');
+        const settingsMenu = document.querySelector('.settings-menu');
+        
+        // Simple click handler for settings icon
+        settingsIcon.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleSettingsMenu();
+        };
+        
+        // Simple touch handler for settings icon
+        settingsIcon.ontouchstart = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleSettingsMenu();
+        };
+        
+        // Close menu when clicking outside
+        document.onclick = function(e) {
+            if (!settingsMenu.contains(e.target) && !settingsIcon.contains(e.target)) {
+                settingsMenu.classList.remove('active');
+            }
+        };
+        
+        // Close menu when touching outside
+        document.ontouchstart = function(e) {
+            if (!settingsMenu.contains(e.target) && !settingsIcon.contains(e.target)) {
+                settingsMenu.classList.remove('active');
+            }
+        };
+        
+        // Prevent menu from closing when clicking inside
+        settingsMenu.onclick = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        };
+        
+        // Prevent menu from closing when touching inside
+        settingsMenu.ontouchstart = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        };
+        
+        // Function to toggle mouse hitbox
+        function toggleMouseHitbox() {
+            showMouseHitbox = !showMouseHitbox;
+            updateMouseHitboxToggleState();
+            
+            if (showMouseHitbox) {
+                // Create mouse hitbox indicator if it doesn't exist
+                if (!mouseHitboxIndicator) {
+                    mouseHitboxIndicator = document.createElement('div');
+                    mouseHitboxIndicator.className = 'mouse-hitbox';
+                    document.body.appendChild(mouseHitboxIndicator);
+                    
+                    // Start animation frame loop for smooth updates
+                    requestAnimationFrame(updateMouseHitboxPosition);
+                }
+                
+                // Show notification
+                showNotification('Mouse Hitbox: ON', 'rgba(77, 153, 211, 0.9)');
+            } else {
+                // Remove mouse hitbox indicator
+                if (mouseHitboxIndicator && mouseHitboxIndicator.parentNode) {
+                    mouseHitboxIndicator.parentNode.removeChild(mouseHitboxIndicator);
+                }
+                mouseHitboxIndicator = null;
+                
+                // Show notification
+                showNotification('Mouse Hitbox: OFF', 'rgba(255, 255, 255, 0.9)');
+            }
+        }
+        
+        // Function to update mouse hitbox position using requestAnimationFrame
+        function updateMouseHitboxPosition() {
+            if (mouseHitboxIndicator && showMouseHitbox) {
+                // Use transform for better performance
+                mouseHitboxIndicator.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+                
+                // Continue the animation loop
+                requestAnimationFrame(updateMouseHitboxPosition);
+            }
+        }
+        
+        // Function to update mouse hitbox toggle state
+        function updateMouseHitboxToggleState() {
+            const toggles = document.querySelectorAll('.settings-toggle');
+            const mouseHitboxToggle = toggles[1]; // Second toggle is for mouse hitbox
+            
+            if (showMouseHitbox) {
+                mouseHitboxToggle.classList.add('active');
+            } else {
+                mouseHitboxToggle.classList.remove('active');
+            }
+        }
+        
+        // Function to show notification
+        function showNotification(message, bgColor) {
+            const notification = document.createElement('div');
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.left = '50%';
+            notification.style.transform = 'translateX(-50%)';
+            notification.style.backgroundColor = bgColor;
+            notification.style.color = bgColor === 'rgba(77, 153, 211, 0.9)' ? 'white' : '#0a0a1a';
+            notification.style.padding = '10px 20px';
+            notification.style.borderRadius = '5px';
+            notification.style.fontFamily = "'Poppins', sans-serif";
+            notification.style.fontSize = '14px';
+            notification.style.zIndex = '9999';
+            notification.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Remove notification after 2 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 2000);
+        }
+        
+        // Track mouse position
+        var mouseX = 0;
+        var mouseY = 0;
+        
+        document.addEventListener('mousemove', function(e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Performance monitoring variables
+        let showPerformanceMonitor = false;
+        let lastFrameTime = 0;
+        let frameCount = 0;
+        let lastFpsUpdate = 0;
+        let showHitboxes = false;
+        
+        // Function to toggle performance monitor
+        function togglePerformanceMonitor() {
+            showPerformanceMonitor = !showPerformanceMonitor;
+            const debugPanel = document.querySelector('.debug-info-panel');
+            const toggles = document.querySelectorAll('.settings-toggle');
+            const perfToggle = toggles[2]; // Third toggle is for performance monitor
+            
+            if (showPerformanceMonitor) {
+                debugPanel.style.display = 'block';
+                debugPanel.style.zIndex = '9999'; // Ensure high z-index
+                perfToggle.classList.add('active');
+                lastFrameTime = performance.now();
+                requestAnimationFrame(updatePerformanceStats);
+                showNotification('Performance Monitor: ON', 'rgba(77, 153, 211, 0.9)');
+            } else {
+                debugPanel.style.display = 'none';
+                perfToggle.classList.remove('active');
+                showNotification('Performance Monitor: OFF', 'rgba(255, 255, 255, 0.9)');
+            }
+        }
+        
+        // Function to update performance statistics
+        function updatePerformanceStats(timestamp) {
+            if (!showPerformanceMonitor) return;
+            
+            const currentTime = performance.now();
+            const frameTime = currentTime - lastFrameTime;
+            lastFrameTime = currentTime;
+            
+            frameCount++;
+            if (currentTime - lastFpsUpdate >= 1000) {
+                const fps = Math.round((frameCount * 1000) / (currentTime - lastFpsUpdate));
+                document.getElementById('fps-counter').textContent = fps;
+                document.getElementById('frame-time').textContent = frameTime.toFixed(2);
+                document.getElementById('gnat-count').textContent = gnats.length;
+                document.getElementById('current-score').textContent = swatCount;
+                
+                frameCount = 0;
+                lastFpsUpdate = currentTime;
+            }
+            
+            requestAnimationFrame(updatePerformanceStats);
+        }
+        
+        // Function to toggle hitbox visualization
+        function toggleHitboxVisualization() {
+            showHitboxes = !showHitboxes;
+            const toggles = document.querySelectorAll('.settings-toggle');
+            const hitboxToggle = toggles[3]; // Fourth toggle is for hitbox visualization
+            
+            if (showHitboxes) {
+                hitboxToggle.classList.add('active');
+                // Show hitboxes for existing gnats
+                document.querySelectorAll('.gnat').forEach(gnat => {
+                    // Create SVG circle for hitbox visualization
+                    const hitbox = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    hitbox.setAttribute("class", "hitbox-visualization");
+                    hitbox.setAttribute("r", gnatHitRadius);
+                    hitbox.setAttribute("fill", "rgba(255, 0, 0, 0.1)");
+                    hitbox.setAttribute("stroke", "rgba(255, 0, 0, 0.5)");
+                    hitbox.setAttribute("stroke-width", "2");
+                    hitbox.setAttribute("cx", "0");
+                    hitbox.setAttribute("cy", "0");
+                    hitbox.style.display = "block";
+                    gnat.appendChild(hitbox);
+                });
+                showNotification('Hitbox Visualization: ON', 'rgba(77, 153, 211, 0.9)');
+            } else {
+                hitboxToggle.classList.remove('active');
+                // Remove all hitbox visualizations
+                document.querySelectorAll('.hitbox-visualization').forEach(el => el.remove());
+                showNotification('Hitbox Visualization: OFF', 'rgba(255, 255, 255, 0.9)');
+            }
+        }
+
+        // Add checkCollisions function for survival mode
+        function checkCollisions() {
+            if (gameMode !== 'survival' || !isPlayerAlive) return;
+            
+            const playerCircle = document.querySelector('.player-circle');
+            const playerRect = playerCircle.getBoundingClientRect();
+            const playerX = playerRect.left + playerRect.width / 2;
+            const playerY = playerRect.top + playerRect.height / 2;
+            
+            for (let i = gnats.length - 1; i >= 0; i--) {
+                const gnat = gnats[i];
+                if (gnat && gnat.alive) {
+                    const dx = gnat.x - playerX;
+                    const dy = gnat.y - playerY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 30) { // Collision threshold
+                        playerHealth -= 25;
+                        updateHealthBar();
+                        
+                        // Create hit effect
+                        for (let j = 0; j < 8; j++) {
+                            createParticle(playerX, playerY, '#ff4444');
+                        }
+                        
+                        // Remove the gnat
+                        killGnat(gnat);
+                        
+                        if (playerHealth <= 0) {
+                            isPlayerAlive = false;
+                            endGame();
+                        }
+                    }
+                }
+            }
+        }
+
+        // Add updateHealthBar function
+        function updateHealthBar() {
+            const healthFill = document.querySelector('.health-fill');
+            const percentage = Math.max(0, playerHealth);
+            healthFill.style.width = percentage + '%';
+            
+            // Update color based on health
+            if (percentage > 60) {
+                healthFill.style.background = '#4CAF50';
+            } else if (percentage > 30) {
+                healthFill.style.background = '#FFC107';
+            } else {
+                healthFill.style.background = '#F44336';
+            }
+        }
+
+        // Modify the game loop to include collision detection
+        function gameLoop() {
+            if (gameMode === 'survival' && isPlayerAlive) {
+                checkCollisions();
+            }
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Start the game loop
+        gameLoop();
+
+        // Add touch event handling for mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ensure cursor is visible on the main menu
+            document.body.style.cursor = 'default';
+            
+            // Show menu content with animation
+            setTimeout(() => {
+                document.querySelector('.menu-content').classList.add('show');
+            }, 300);
+            
+            // Initialize facts display
+            initFacts();
+            
+            // Initialize debug toggle state
+            updateDebugToggleState();
+            
+            // Initialize performance monitor toggle state
+            const perfToggle = document.querySelectorAll('.settings-toggle')[2];
+            if (perfToggle) {
+                if (showPerformanceMonitor) {
+                    perfToggle.classList.add('active');
+                } else {
+                    perfToggle.classList.remove('active');
+                }
+            }
+            
+            // Initialize hitbox visualization toggle state
+            const hitboxToggle = document.querySelectorAll('.settings-toggle')[3];
+            if (hitboxToggle) {
+                if (showHitboxes) {
+                    hitboxToggle.classList.add('active');
+                } else {
+                    hitboxToggle.classList.remove('active');
+                }
+            }
+            
+            // Add touch event listeners for mobile
+            setupMobileTouchEvents();
+        });
+
+        // Function to setup mobile touch events
+        function setupMobileTouchEvents() {
+            // Prevent default touch behaviors
+            document.addEventListener('touchmove', function(e) {
+                if (e.target.classList.contains('game') || 
+                    e.target.classList.contains('menu-screen') || 
+                    e.target.classList.contains('instruction-screen') || 
+                    e.target.classList.contains('game-over-screen')) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            // Handle touch events for the game
+            const gameElement = document.querySelector('.game');
+            if (gameElement) {
+                gameElement.addEventListener('touchstart', handleTouch, { passive: false });
+            }
+            
+            // Add touch events for menu buttons
+            const menuButtons = document.querySelectorAll('.mode-button');
+            menuButtons.forEach(button => {
+                button.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    // Add visual feedback
+                    this.style.transform = 'scale(0.95)';
+                    this.style.opacity = '0.8';
+                }, { passive: false });
+                
+                button.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    // Remove visual feedback
+                    this.style.transform = 'scale(1)';
+                    this.style.opacity = '1';
+                    // Trigger the click event
+                    this.click();
+                }, { passive: false });
+            });
+            
+            // Add touch events for settings icon
+            const settingsIcon = document.querySelector('.settings-icon');
+            if (settingsIcon) {
+                settingsIcon.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    this.style.transform = 'scale(0.9) rotate(15deg)';
+                }, { passive: false });
+                
+                settingsIcon.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    this.style.transform = 'scale(1) rotate(0deg)';
+                    toggleSettingsMenu();
+                }, { passive: false });
+            }
+            
+            // Add touch events for settings menu items
+            const settingsToggles = document.querySelectorAll('.settings-toggle');
+            settingsToggles.forEach(toggle => {
+                toggle.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    this.style.opacity = '0.8';
+                }, { passive: false });
+                
+                toggle.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    this.style.opacity = '1';
+                    this.click();
+                }, { passive: false });
+            });
+            
+            // Add touch events for settings buttons
+            const settingsButtons = document.querySelectorAll('.settings-button');
+            settingsButtons.forEach(button => {
+                button.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    this.style.transform = 'scale(0.95)';
+                    this.style.opacity = '0.8';
+                }, { passive: false });
+                
+                button.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    this.style.transform = 'scale(1)';
+                    this.style.opacity = '1';
+                    this.click();
+                }, { passive: false });
+            });
+            
+            // Add touch events for name input
+            const nameInput = document.querySelector('.name-input');
+            if (nameInput) {
+                nameInput.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showKeyboard(this);
+                }, { passive: false });
+            }
+            
+            // Setup keyboard key events
+            setupKeyboard();
+        }
+        
+        // Function to setup keyboard functionality
+        function setupKeyboard() {
+            const keyboard = document.querySelector('.onscreen-keyboard');
+            const keys = keyboard.querySelectorAll('.keyboard-key');
+            let activeInput = null;
+            let isShiftActive = false;
+            
+            // Function to update letter case
+            function updateLetterCase() {
+                const letterKeys = keyboard.querySelectorAll('.keyboard-key:not(.shift):not(.delete):not(.space):not(.done)');
+                letterKeys.forEach(key => {
+                    if (key.textContent.length === 1 && key.textContent.match(/[a-z]/i)) {
+                        key.textContent = isShiftActive ? key.textContent.toUpperCase() : key.textContent.toLowerCase();
+                    }
+                });
+            }
+            
+            keys.forEach(key => {
+                key.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    this.style.transform = 'scale(0.95)';
+                    this.style.opacity = '0.8';
+                }, { passive: false });
+                
+                key.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    this.style.transform = 'scale(1)';
+                    this.style.opacity = '1';
+                    
+                    if (activeInput) {
+                        if (this.classList.contains('delete')) {
+                            // Handle backspace
+                            activeInput.value = activeInput.value.slice(0, -1);
+                        } else if (this.classList.contains('space')) {
+                            // Handle space
+                            activeInput.value += ' ';
+                        } else if (this.classList.contains('done')) {
+                            // Hide keyboard
+                            hideKeyboard();
+                        } else if (this.classList.contains('shift')) {
+                            // Toggle shift
+                            isShiftActive = !isShiftActive;
+                            this.classList.toggle('active');
+                            updateLetterCase();
+                        } else {
+                            // Add the pressed key to input
+                            let char = this.textContent;
+                            if (isShiftActive && char.match(/[a-z]/i)) {
+                                char = char.toUpperCase();
+                            }
+                            activeInput.value += char;
+                            // Auto-disable shift after one character
+                            if (isShiftActive) {
+                                isShiftActive = false;
+                                const shiftKey = keyboard.querySelector('.keyboard-key.shift');
+                                shiftKey.classList.remove('active');
+                                updateLetterCase();
+                            }
+                        }
+                    }
+                }, { passive: false });
+            });
+            
+            // Function to show keyboard
+            window.showKeyboard = function(input) {
+                activeInput = input;
+                keyboard.classList.add('show');
+                // Reset shift state
+                isShiftActive = false;
+                const shiftKey = keyboard.querySelector('.keyboard-key.shift');
+                shiftKey.classList.remove('active');
+                updateLetterCase();
+                // Scroll input into view if needed
+                input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            };
+            
+            // Function to hide keyboard
+            window.hideKeyboard = function() {
+                keyboard.classList.remove('show');
+                activeInput = null;
+                // Reset shift state
+                isShiftActive = false;
+                const shiftKey = keyboard.querySelector('.keyboard-key.shift');
+                shiftKey.classList.remove('active');
+                updateLetterCase();
+            };
+            
+            // Hide keyboard when clicking outside
+            document.addEventListener('touchstart', function(e) {
+                if (!keyboard.contains(e.target) && 
+                    !e.target.classList.contains('name-input')) {
+                    hideKeyboard();
+                }
+            }, { passive: false });
+        }
+
+        // Modify handleTouch function to better handle mobile touches
+        function handleTouch(e) {
+            e.preventDefault();
+            
+            // Get touch coordinates immediately
+            var touch = e.touches[0] || e.changedTouches[0];
+            var x = touch.clientX;
+            var y = touch.clientY;
+            
+            // Process click immediately without cooldown check
+            if (gnats.length > 0) {
+                checkPoint(x, y);
+            }
+        }
+
+        // Modify startGameForReal function to handle mobile better
+        function startGameForReal() {
+            // Reset game state
+            playerHealth = 100;
+            isPlayerAlive = true;
+            
+            // Start background music
+            try {
+                backgroundMusic.play().catch(function(error) {
+                    console.log("Music autoplay prevented by browser. Click anywhere to start music.");
+                    document.addEventListener('click', function startMusicOnClick() {
+                        backgroundMusic.play();
+                        document.removeEventListener('click', startMusicOnClick);
+                    }, { once: true });
+                });
+            } catch (e) {
+                console.error("Error playing background music:", e);
+            }
+            
+            // Remove combo reset
+            // currentCombo = 0;
+            // totalBonusPoints = 0;
+            
+            // Hide instruction screen
+            document.querySelector('.instruction-screen').classList.remove('show');
+            document.querySelector('.instruction-content').classList.remove('show');
+            
+            setTimeout(() => {
+                document.querySelector('.instruction-screen').style.display = 'none';
+                
+                // Clear any existing gnats and animations
+                TweenMax.killAll();
+                enemies.innerHTML = '';
+                gnats = [];
+                particles = [];
+                
+                // Remove any hit area indicators
+                removeHitAreaIndicator();
+                removeGnatHighlights();
+                
+                document.querySelector('.game').style.display = 'block';
+                document.querySelector('.game-over-screen').style.display = 'none';
+                
+                if (gameMode === 'attack') {
+                    // Attack mode setup
+                    document.querySelector('.timer').style.display = 'block';
+                    document.querySelector('.counter').style.display = 'block';
+                    document.querySelector('.health-bar').style.display = 'none';
+                    document.querySelector('.player-circle').style.display = 'none';
+                    document.body.style.cursor = 'default';
+                    // Show combo indicator in attack mode
+                    // comboIndicator.style.display = 'block';
+                } else {
+                    // Survival mode setup
+                    document.querySelector('.timer').style.display = 'none';
+                    document.querySelector('.counter').style.display = 'none';
+                    document.querySelector('.health-bar').style.display = 'block';
+                    document.querySelector('.player-circle').style.display = 'block';
+                    document.body.style.cursor = 'none';
+                    // Hide combo indicator in survival mode
+                    // comboIndicator.style.display = 'none';
+                }
+                
+                swatCount = 0;
+                timeLeft = 30;
+                
+                if (gameMode === 'attack') {
+                    document.querySelector('.timer-text').textContent = timeLeft;
+                    document.querySelector('.timer-circle-progress').style.strokeDashoffset = '0';
+                    
+                    // Start the game timer for attack mode
+                    gameTimer = setInterval(function() {
+                        timeLeft--;
+                        document.querySelector('.timer-text').textContent = timeLeft;
+                        var progress = (timeLeft / 30) * 283;
+                        document.querySelector('.timer-circle-progress').style.strokeDashoffset = (283 - progress) + 'px';
+                        
+                        if (timeLeft <= 5) {
+                            document.querySelector('.timer-circle-progress').style.stroke = '#ff4444';
+                            document.querySelector('.timer-text').style.color = '#ff4444';
+                        }
+                        
+                        if (timeLeft <= 0) {
+                            endGame();
+                        }
+                    }, 1000);
+                }
+                
+                // Update score display
+                updateScore();
+                
+                // Start emitting gnats
+                emitGnats();
+                
+                // Start data stream effect
+                setInterval(createDataStream, 2000);
+                
+                // Start periodic cleanup
+                setInterval(cleanupOrphanedGnats, 100);
+                
+                // Start debug features if enabled
+                if (debugMode) {
+                    requestAnimationFrame(updateGnatHighlights);
+                }
+            }, 500);
+        }
+
+        // Function to show main menu
+        function showMainMenu() {
+            // Hide all screens first
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            // Reset any existing animations
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                item.style.animation = 'none';
+                item.offsetHeight; // Trigger reflow
+                item.style.animation = null;
+            });
+            
+            // Show main menu with animation
+            const mainMenu = document.getElementById('mainMenu');
+            mainMenu.classList.add('active');
+            
+            // Animate menu items with staggered delay
+            menuItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.add('show');
+                }, 100 * index);
+            });
+            
+            // Reset game state
+            resetGame();
+            
+            // Hide any existing notifications
+            const notifications = document.querySelectorAll('.notification');
+            notifications.forEach(notification => {
+                notification.classList.remove('show');
+            });
+        }
+
+        // Add combo system variables
+        // let currentCombo = 0;
+        // let lastHitTime = 0;
+        // let comboTimeout = null;
+        // let totalBonusPoints = 0;
+        // const COMBO_TIMEOUT = 2000; // 2 seconds to maintain combo
+        // const COMBO_MULTIPLIER = 0.5; // 50% bonus per combo level
+
+        // Function to update combo
+        // function updateCombo(hit) {
+        //     const now = Date.now();
+        //     const comboIndicator = document.querySelector('.combo-indicator');
+            
+        //     if (hit) {
+        //         // Clear any existing timeout
+        //         if (comboTimeout) {
+        //             clearTimeout(comboTimeout);
+        //         }
+                
+        //         // Increment combo
+        //         currentCombo++;
+                
+        //         // Calculate bonus points
+        //         const bonusPoints = Math.floor(currentCombo * COMBO_MULTIPLIER);
+        //         totalBonusPoints += bonusPoints;
+                
+        //         // Update display
+        //         comboIndicator.style.display = 'block';
+        //         comboIndicator.querySelector('.combo-count').textContent = currentCombo;
+        //         comboIndicator.querySelector('.combo-bonus').textContent = `+${bonusPoints}`;
+        //         comboIndicator.classList.add('active');
+                
+        //         // Remove active class after animation
+        //         setTimeout(() => {
+        //             comboIndicator.classList.remove('active');
+        //         }, 300);
+                
+        //         // Set timeout to reset combo
+        //         comboTimeout = setTimeout(() => {
+        //             currentCombo = 0;
+        //             comboIndicator.style.display = 'none';
+        //         }, COMBO_TIMEOUT);
+        //     } else {
+        //         // Reset combo on miss
+        //         currentCombo = 0;
+        //         comboIndicator.style.display = 'none';
+        //         if (comboTimeout) {
+        //             clearTimeout(comboTimeout);
+        //         }
+        //     }
+        // }
+
+        // // Function to get total score including bonus
+        // function getTotalScore() {
+        //     return swatCount + totalBonusPoints;
+        // }
+
+        // // Modify the existing checkPoint function to include combo system
+        // const originalCheckPoint = checkPoint;
+        // checkPoint = function(x, y) {
+        //     const result = originalCheckPoint(x, y);
+        //     if (result) {
+        //         updateCombo(true);
+        //     } else {
+        //         updateCombo(false);
+        //     }
+        //     return result;
+        // };
+
+        // // Modify the existing submitScore function to include bonus points
+        // const originalSubmitScore = submitScore;
+        // submitScore = function() {
+        //     var name = document.querySelector('.name-input').value.trim();
+        //     if (name) {
+        //         var score = {
+        //             name: name,
+        //             score: getTotalScore(), // Use total score including bonus
+        //             date: new Date().toLocaleDateString()
+        //         };
+                
+        //         highScores.push(score);
+        //         highScores.sort((a, b) => b.score - a.score);
+        //         highScores = highScores.slice(0, 10);
+        //         localStorage.setItem('databreachDefenderHighScores', JSON.stringify(highScores));
+        //         updateLeaderboardDisplay();
+                
+        //         // Return to menu with animation
+        //         document.querySelector('.game-over-screen').classList.remove('show');
+        //         document.querySelector('.game-over-content').classList.remove('show');
+        //         setTimeout(() => {
+        //             document.querySelector('.game-over-screen').style.display = 'none';
+        //             document.querySelector('.menu-screen').style.display = 'flex';
+        //         }, 500);
+        //     }
+        // };
+
+        // // Modify the existing endGame function to show total score
+        // const originalEndGame = endGame;
+        // endGame = function() {
+        //     originalEndGame();
+        //     document.querySelector('.final-score').textContent = getTotalScore();
+        //     document.getElementById('high-score').textContent = getTotalScore();
+        // };
+
+        // Add to your DOMContentLoaded event listener
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ensure cursor is visible on the main menu
+            document.body.style.cursor = 'default';
+            
+            // Show menu content with animation
+            setTimeout(() => {
+                document.querySelector('.menu-content').classList.add('show');
+            }, 300);
+            
+            // Initialize facts display
+            initFacts();
+            
+            // Initialize debug toggle state
+            updateDebugToggleState();
+            
+            // Initialize performance monitor toggle state
+            const perfToggle = document.querySelectorAll('.settings-toggle')[2];
+            if (perfToggle) {
+                if (showPerformanceMonitor) {
+                    perfToggle.classList.add('active');
+                } else {
+                    perfToggle.classList.remove('active');
+                }
+            }
+            
+            // Initialize hitbox visualization toggle state
+            const hitboxToggle = document.querySelectorAll('.settings-toggle')[3];
+            if (hitboxToggle) {
+                if (showHitboxes) {
+                    hitboxToggle.classList.add('active');
+                } else {
+                    hitboxToggle.classList.remove('active');
+                }
+            }
+        });
+
+        // Add speed settings variables
+        let gnatSpeeds = {
+            '.shield-icon': 10,
+            '.password-icon': 7,
+            '.folder-icon': 10,
+            '.banking-information': 7
+        };
+
+        // Function to initialize speed settings
+        function initializeSpeedSettings() {
+            // Set initial values in the inputs
+            document.getElementById('shield-speed').value = gnatSpeeds['.shield-icon'];
+            document.getElementById('password-speed').value = gnatSpeeds['.password-icon'];
+            document.getElementById('folder-speed').value = gnatSpeeds['.folder-icon'];
+            document.getElementById('banking-speed').value = gnatSpeeds['.banking-information'];
+
+            // Add event listeners for both keyboard and on-screen keyboard
+            const speedInputs = document.querySelectorAll('.speed-input-group input');
+            speedInputs.forEach(input => {
+                // Handle direct keyboard input
+                input.addEventListener('change', updateGnatSpeeds);
+                input.addEventListener('input', updateGnatSpeeds);
+                
+                // Handle on-screen keyboard input
+                input.addEventListener('focus', function() {
+                    showKeyboard();
+                    // Store the currently focused input
+                    currentInput = this;
+                });
+                
+                // Handle blur to hide keyboard when clicking outside
+                input.addEventListener('blur', function() {
+                    if (!keyboard.contains(document.activeElement)) {
+                        hideKeyboard();
+                    }
+                });
+            });
+        }
+
+        // Add keyboard support for speed inputs
+        function handleKeyboardInput(value) {
+            if (currentInput && currentInput.classList.contains('speed-input')) {
+                // Handle backspace
+                if (value === 'backspace') {
+                    currentInput.value = currentInput.value.slice(0, -1);
+                }
+                // Handle numbers and decimal point
+                else if (/[\d.]/.test(value)) {
+                    // Only allow one decimal point
+                    if (value === '.' && currentInput.value.includes('.')) {
+                        return;
+                    }
+                    // Limit to 4 characters (e.g., "10.5")
+                    if (currentInput.value.length < 4) {
+                        currentInput.value += value;
+                    }
+                }
+                // Update speeds when input changes
+                updateGnatSpeeds();
+            }
+        }
+
+        // Modify the existing keyboard click handler
+        document.querySelectorAll('.keyboard-key').forEach(key => {
+            key.addEventListener('click', function() {
+                const value = this.textContent;
+                handleKeyboardInput(value);
+            });
+        });
+
+        // Function to update gnat speeds
+        function updateGnatSpeeds() {
+            const shieldSpeed = parseFloat(document.getElementById('shield-speed').value) || 10;
+            const passwordSpeed = parseFloat(document.getElementById('password-speed').value) || 7;
+            const folderSpeed = parseFloat(document.getElementById('folder-speed').value) || 10;
+            const bankingSpeed = parseFloat(document.getElementById('banking-speed').value) || 7;
+
+            gnatSpeeds['.shield-icon'] = shieldSpeed;
+            gnatSpeeds['.password-icon'] = passwordSpeed;
+            gnatSpeeds['.folder-icon'] = folderSpeed;
+            gnatSpeeds['.banking-information'] = bankingSpeed;
+            
+            console.log('Updated speeds:', gnatSpeeds); // Debug log
+            showNotification('Gnat speeds updated!', 'rgba(77, 153, 211, 0.9)');
+        }
+
+        // Add to your DOMContentLoaded event listener
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... existing code ...
+            initializeSpeedSettings();
+        });
+
+        // Function to clear leaderboard
+        function clearLeaderboard() {
+            if (confirm('Are you sure you want to clear the leaderboard? This cannot be undone.')) {
+                highScores = [];
+                localStorage.setItem('databreachDefenderHighScores', JSON.stringify(highScores));
+                updateLeaderboardDisplay();
+                
+                // Show notification
+                showNotification('Leaderboard cleared!', 'rgba(255, 0, 0, 0.9)');
+            }
+        }
+
+        // Add variable to track temp game over button visibility
+        let showTempGameOverButton = false;
+        
+        // Function to toggle temp game over button visibility
+        function toggleTempGameOverButton() {
+            showTempGameOverButton = !showTempGameOverButton;
+            
+            // Update toggle state
+            const toggles = document.querySelectorAll('.settings-toggle');
+            const tempGameOverToggle = toggles[4]; // Fifth toggle is for temp game over button
+            
+            if (showTempGameOverButton) {
+                tempGameOverToggle.classList.add('active');
+                // Show the button
+                document.querySelector('.temp-game-over-btn').style.display = 'block';
+                showNotification('Temp Game Over Button: ON', 'rgba(77, 153, 211, 0.9)');
+            } else {
+                tempGameOverToggle.classList.remove('active');
+                // Hide the button
+                document.querySelector('.temp-game-over-btn').style.display = 'none';
+                showNotification('Temp Game Over Button: OFF', 'rgba(255, 255, 255, 0.9)');
+            }
+        }
+        
+        // Initialize temp game over button toggle state
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... existing code ...
+            
+            // Initialize temp game over button toggle state
+            const tempGameOverToggle = document.querySelectorAll('.settings-toggle')[4];
+            if (tempGameOverToggle) {
+                if (showTempGameOverButton) {
+                    tempGameOverToggle.classList.add('active');
+                    document.querySelector('.temp-game-over-btn').style.display = 'block';
+                } else {
+                    tempGameOverToggle.classList.remove('active');
+                    document.querySelector('.temp-game-over-btn').style.display = 'none';
+                }
+            }
+        });
+
+        // Add speed preset function
+        function setSpeedPreset(level) {
+            const presets = {
+                1: { // Easy
+                    '.shield-icon': 15,
+                    '.password-icon': 12,
+                    '.folder-icon': 15,
+                    '.banking-information': 12
+                },
+                2: { // Medium
+                    '.shield-icon': 10,
+                    '.password-icon': 7,
+                    '.folder-icon': 10,
+                    '.banking-information': 7
+                },
+                3: { // Hard
+                    '.shield-icon': 5,
+                    '.password-icon': 4,
+                    '.folder-icon': 5,
+                    '.banking-information': 4
+                }
+            };
+
+            // Update the speed inputs
+            document.getElementById('shield-speed').value = presets[level]['.shield-icon'];
+            document.getElementById('password-speed').value = presets[level]['.password-icon'];
+            document.getElementById('folder-speed').value = presets[level]['.folder-icon'];
+            document.getElementById('banking-speed').value = presets[level]['.banking-information'];
+
+            // Update active button state
+            document.querySelectorAll('.speed-preset-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update the speeds
+            updateGnatSpeeds();
+            showNotification(`Speed preset ${level} applied!`, 'rgba(77, 153, 211, 0.9)');
+        }
+
+        document.addEventListener('mousemove', function(e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Update player circle position
+            if (gameMode === 'survival' && isPlayerAlive) {
+                const playerCircle = document.querySelector('.player-circle');
+                if (playerCircle) {
+                    playerCircle.style.left = (mouseX - 15) + 'px';
+                    playerCircle.style.top = (mouseY - 15) + 'px';
+                }
+            }
+        });
+
+        // ... existing code ...
+
+        // Handle touch events for the game
+        const gameElement = document.querySelector('.game');
+        if (gameElement) {
+            gameElement.addEventListener('touchstart', handleTouch, { passive: false });
+            gameElement.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                if (gameMode === 'survival' && isPlayerAlive) {
+                    const touch = e.touches[0];
+                    const playerCircle = document.querySelector('.player-circle');
+                    if (playerCircle) {
+                        playerCircle.style.left = (touch.clientX - 15) + 'px';
+                        playerCircle.style.top = (touch.clientY - 15) + 'px';
+                    }
+                }
+            }, { passive: false });
+        }
+        // ... existing code ...
+
+        // Function to start background music
+        function startBackgroundMusic() {
+            backgroundMusic.play();
+            backgroundMusic.loop = true;
+        }
+
+        var backgroundMusic = document.getElementById('bgMusic');
+        backgroundMusic.volume = 0.3;
+
+        function startBackgroundMusic() {
+            try {
+                backgroundMusic.play().catch(function(error) {
+                    console.log("Music autoplay prevented by browser. Click anywhere to start music.");
+                    document.addEventListener('click', function startMusicOnClick() {
+                        backgroundMusic.play();
+                        document.removeEventListener('click', startMusicOnClick);
+                    }, { once: true });
+                });
+            } catch (e) {
+                console.error("Error playing background music:", e);
+            }
+        }
+
+        // Add to the JavaScript section, after the other toggle variables
+        let showSurvivalMode = false; // Changed to false by default
+
+        function toggleSurvivalMode() {
+            showSurvivalMode = !showSurvivalMode;
+            const toggles = document.querySelectorAll('.settings-toggle');
+            const survivalToggle = toggles[5]; // Sixth toggle is for survival mode
+            
+            if (showSurvivalMode) {
+                survivalToggle.classList.add('active');
+                document.querySelector('.mode-button[onclick="startGame(\'survival\')"]').style.display = 'block';
+                showNotification('Survival Mode: ON', 'rgba(77, 153, 211, 0.9)');
+            } else {
+                survivalToggle.classList.remove('active');
+                document.querySelector('.mode-button[onclick="startGame(\'survival\')"]').style.display = 'none';
+                showNotification('Survival Mode: OFF', 'rgba(255, 255, 255, 0.9)');
+            }
+        }
+
+        // Add to the DOMContentLoaded event listener, after the other toggle initializations
+        // Initialize survival mode toggle state
+        const survivalToggle = document.querySelectorAll('.settings-toggle')[5];
+        if (survivalToggle) {
+            if (showSurvivalMode) {
+                survivalToggle.classList.add('active');
+            } else {
+                survivalToggle.classList.remove('active');
+            }
+        }
+
+        // Set initial visibility of survival mode button to hidden
+        document.querySelector('.mode-button[onclick="startGame(\'survival\')"]').style.display = 'none';
+    </script>
+    <audio autoplay preload loop>
+        <source src="assets/sfx/music.mp3" type="audio/mpeg">
+    </audio>
+</body>
+</html>
