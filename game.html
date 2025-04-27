@@ -3886,8 +3886,17 @@
                     input.addEventListener('touchstart', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
+                        this.focus(); // Ensure input gets focus
                         showKeyboard(this);
                     }, { passive: false });
+
+                    // Add click event as fallback
+                    input.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.focus();
+                        showKeyboard(this);
+                    });
                 });
             }
         }
