@@ -3,7 +3,7 @@
 <head>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Add Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <meta charset="UTF-8">
@@ -398,7 +398,7 @@
             opacity: 1;
         }
         .game-over-content.show {
-            transform: translateY(0);
+            transform: translateY(-80px);
             opacity: 1;
             overflow: hidden;
         }
@@ -590,6 +590,23 @@
             text-align: left;
             transition: all 0.3s ease;
         }
+
+        .tutorial-start-btn {
+            animation: borderstartpulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            outline: 2px solid transparent;
+            max-width: 300px;
+        }
+
+        @keyframes borderstartpulse {
+            0% {
+                outline-color: rgba(170, 21, 21, 0.86);
+                outline-width: 2px;
+            }   
+            100% {
+                outline-color: rgba(170, 21, 21, 0);
+                outline-width: 8px;
+            }
+        }
         
         .name-input:focus {
             outline: none;
@@ -634,17 +651,42 @@
             font-family: 'Poppins', sans-serif;
             font-size: 16px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.1s ease;
             user-select: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .keyboard-key:active {
+            transform: scale(0.9);
+            background: rgba(77, 153, 211, 0.3);
+        }
+        
+        .keyboard-key::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+        
+        .keyboard-key:active::after {
+            width: 200%;
+            height: 200%;
+        }
+        
+        .keyboard-key.special {
+            min-width: 35px;
+            font-size: 14px;
         }
         
         .keyboard-key:hover {
             background: rgba(255, 255, 255, 0.2);
-        }
-        
-        .keyboard-key:active {
-            background: rgba(77, 153, 211, 0.3);
-            transform: scale(0.95);
         }
         
         .keyboard-key.wide {
@@ -1480,6 +1522,7 @@
             font-size: 20px;
             background-color: #aa1515;
             color: white;
+            font-weight: 800;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -1606,7 +1649,7 @@
         .swiper {
             width: 100%;
             height: 450px;
-            background: rgb(255, 255, 255);
+            background: rgba(255, 255, 255, 0.0);
             border-radius: 10px;
             border: 1px solid #08080800;
             box-shadow: 0 0 20px rgba(172, 172, 172, 0.2);
@@ -1638,6 +1681,10 @@
             justify-content: center;
             align-items: center;
             height: 100%;
+        }
+
+        .slide-content img {
+            border-radius: 10px;
         }
 
         .instruction-icon {
@@ -1676,13 +1723,13 @@
         }
 
         .point-item span {
-            color: #000000;
+            color: #ffffff;
             font-size: 18px;
             font-weight: bold;
         }
 
         .slide-content h3 {
-            color: #000000;
+            color: #ffffff;
             font-size: 30px;
             margin-bottom: 15px;
             font-weight: 100;
@@ -1702,7 +1749,7 @@
             margin: 0;
             text-align: center;
             width: 100%;
-            color: #000000 !important;
+            color: #ffffff !important;
         }
 
         /* Mobile Responsive Adjustments */
@@ -1723,10 +1770,10 @@
 
         .swiper-button-next,
         .swiper-button-prev {
-            color: #1d1d1d !important;
+            color: #ffffff !important;
             width: 60px !important;
             height: 60px !important;
-            background-color: #f0f0f0;
+            background-color: #f0f0f01a;
             box-shadow: 0 0 10px rgba(172, 172, 172, 0.2);
             border-radius: 100%;
         }
@@ -1916,6 +1963,7 @@
             <div class="keyboard-key">8</div>
             <div class="keyboard-key">9</div>
             <div class="keyboard-key">0</div>
+            <div class="keyboard-key delete">⌫</div>
         </div>
         <div class="keyboard-row">
             <div class="keyboard-key">q</div>
@@ -1949,10 +1997,14 @@
             <div class="keyboard-key">b</div>
             <div class="keyboard-key">n</div>
             <div class="keyboard-key">m</div>
-            <div class="keyboard-key delete">⌫</div>
+            <div class="keyboard-key special">@</div>
+            <div class="keyboard-key special">.</div>
         </div>
         <div class="keyboard-row">
+            <div class="keyboard-key special">_</div>
+            <div class="keyboard-key special">-</div>
             <div class="keyboard-key space">space</div>
+            <div class="keyboard-key special">+</div>
             <div class="keyboard-key done">Done</div>
         </div>
     </div>
@@ -2079,14 +2131,14 @@
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
                             <div class="slide-content">
-                                <img src="assets/images/timer.gif" style="width: 80px; margin-bottom: -15px;" alt="General icon">
+                                <img src="assets/images/timer.gif" style="width: 70px; margin-bottom: -15px;" alt="General icon">
                                 <h3>Catch as many breaches <br>before time runs out</h3>
                                 <p>Breaches will show up on the screen, quickly tap on them <br> to "catch" them and get a higher score.</p>
                             </div>
                         </div>
                         <div class="swiper-slide">
                             <div class="slide-content">
-                                <img src="assets/images/task-list.gif" style="width: 80px; margin-bottom: -15px;" alt="General icon">
+                                <img src="assets/images/task-list.gif" style="width: 70px; margin-bottom: -15px;" alt="General icon">
                                 <h3>The more severe a breach is, <br> the more points you get.</h3>
                                 <div class="points-grid">
                                     <div class="point-item">
@@ -2110,7 +2162,7 @@
                         </div>
                         <div class="swiper-slide">
                             <div class="slide-content">
-                                <img src="assets/images/trophy.gif" style="width: 80px; margin-bottom: -15px;" alt="General icon">
+                                <img src="assets/images/trophy.gif" style="width: 70px; margin-bottom: -15px;" alt="General icon">
                                 <h3>Compete for the highest score to <br> earn a prize at the end of RSA</h3>
                                 <p>Winners at the end of RSA will receive a cash prize. <br>Make sure to submit your email with your score so we can send you your prize!</p>
                             </div>
@@ -2121,7 +2173,7 @@
                     <div class="swiper-button-next"></div>
                 </div>
             </div>
-            <button class="button" onclick="startGameForReal()">Let's Go!</button>
+            <button class="button tutorial-start-btn" onclick="startGameForReal()">Let's Go!</button>
         </div>
     </div>
 
@@ -3904,9 +3956,24 @@
         // Function to setup keyboard functionality
         function setupKeyboard() {
             const keyboard = document.querySelector('.onscreen-keyboard');
+            const keyboardSound = document.getElementById('keyboardSound');
+            if (!keyboard) {
+                console.error('Keyboard element not found');
+                return;
+            }
+            
             const keys = keyboard.querySelectorAll('.keyboard-key');
             let activeInput = null;
             let isShiftActive = false;
+            
+            // Function to play keyboard sound
+            function playKeyboardSound() {
+                if (keyboardSound) {
+                    keyboardSound.currentTime = 0;
+                    keyboardSound.volume = 0.3; // Set volume to 30%
+                    keyboardSound.play().catch(e => console.log('Audio play failed:', e));
+                }
+            }
             
             // Function to update letter case
             function updateLetterCase() {
@@ -3920,39 +3987,46 @@
             
             // Function to show keyboard
             window.showKeyboard = function(input) {
+                if (!keyboard) return;
                 keyboard.classList.add('show');
                 activeInput = input;
                 // Reset shift state
                 isShiftActive = false;
                 const shiftKey = keyboard.querySelector('.keyboard-key.shift');
-                shiftKey.classList.remove('active');
+                if (shiftKey) {
+                    shiftKey.classList.remove('active');
+                }
                 updateLetterCase();
             };
             
             // Function to hide keyboard
             window.hideKeyboard = function() {
+                if (!keyboard) return;
                 keyboard.classList.remove('show');
                 activeInput = null;
                 // Reset shift state
                 isShiftActive = false;
                 const shiftKey = keyboard.querySelector('.keyboard-key.shift');
-                shiftKey.classList.remove('active');
+                if (shiftKey) {
+                    shiftKey.classList.remove('active');
+                }
                 updateLetterCase();
             };
             
             keys.forEach(key => {
                 key.addEventListener('touchstart', function(e) {
                     e.preventDefault();
-                    this.style.transform = 'scale(0.95)';
-                    this.style.opacity = '0.8';
+                    this.style.transform = 'scale(0.9)';
+                    this.style.background = 'rgba(77, 153, 211, 0.3)';
                 }, { passive: false });
                 
                 key.addEventListener('touchend', function(e) {
                     e.preventDefault();
                     this.style.transform = 'scale(1)';
-                    this.style.opacity = '1';
+                    this.style.background = 'rgba(255, 255, 255, 0.1)';
                     
                     if (activeInput) {
+                        playKeyboardSound();
                         if (this.classList.contains('delete')) {
                             // Handle backspace
                             activeInput.value = activeInput.value.slice(0, -1);
@@ -3974,14 +4048,6 @@
                     }
                 }, { passive: false });
             });
-            
-            // Hide keyboard when clicking outside
-            document.addEventListener('touchstart', function(e) {
-                if (!keyboard.contains(e.target) && 
-                    !e.target.classList.contains('name-input')) {
-                    hideKeyboard();
-                }
-            }, { passive: false });
         }
 
         // Modify handleTouch function to better handle mobile touches
@@ -4758,30 +4824,155 @@
             loadSettings();
             // ... rest of the existing DOMContentLoaded code ...
         });
-    </script>
-    <audio autoplay preload loop>
-        <source src="assets/sfx/music.mp3" type="audio/mpeg">
-    </audio>
-    <!-- Add Swiper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script>
-        const swiper = new Swiper('.swiper', {
-            // Optional parameters
-            direction: 'horizontal',
-            loop: true,
+
+        // ... existing code ...
+        // Initialize keyboard when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setupKeyboard();
             
-            // If you want pagination
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            
-            // Navigation arrows
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
+            // Optimize name input touch events
+            const nameInputs = document.querySelectorAll('.name-input');
+            if (nameInputs) {
+                nameInputs.forEach(input => {
+                    // Remove any existing event listeners
+                    input.removeEventListener('touchstart', null);
+                    input.removeEventListener('click', null);
+                    
+                    input.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.focus();
+                        showKeyboard(this);
+                    }, { passive: false });
+
+                    input.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.focus();
+                        showKeyboard(this);
+                    });
+                });
             }
         });
-    </script>
-</body>
+
+        // Function to setup keyboard functionality
+        function setupKeyboard() {
+            const keyboard = document.querySelector('.onscreen-keyboard');
+            if (!keyboard) {
+                console.error('Keyboard element not found');
+                return;
+            }
+            
+            const keys = keyboard.querySelectorAll('.keyboard-key');
+            let activeInput = null;
+            let isShiftActive = false;
+            
+            // Function to update letter case
+            function updateLetterCase() {
+                const letterKeys = keyboard.querySelectorAll('.keyboard-key:not(.shift):not(.delete):not(.space):not(.done)');
+                letterKeys.forEach(key => {
+                    if (key.textContent.length === 1 && key.textContent.match(/[a-z]/i)) {
+                        key.textContent = isShiftActive ? key.textContent.toUpperCase() : key.textContent.toLowerCase();
+                    }
+                });
+            }
+            
+            // Function to show keyboard
+            window.showKeyboard = function(input) {
+                if (!keyboard) return;
+                keyboard.classList.add('show');
+                activeInput = input;
+                // Reset shift state
+                isShiftActive = false;
+                const shiftKey = keyboard.querySelector('.keyboard-key.shift');
+                if (shiftKey) {
+                    shiftKey.classList.remove('active');
+                }
+                updateLetterCase();
+            };
+            
+            // Function to hide keyboard
+            window.hideKeyboard = function() {
+                if (!keyboard) return;
+                keyboard.classList.remove('show');
+                activeInput = null;
+                // Reset shift state
+                isShiftActive = false;
+                const shiftKey = keyboard.querySelector('.keyboard-key.shift');
+                if (shiftKey) {
+                    shiftKey.classList.remove('active');
+                }
+                updateLetterCase();
+            };
+            
+            keys.forEach(key => {
+                key.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    this.style.transform = 'scale(0.95)';
+                    this.style.opacity = '0.8';
+                }, { passive: false });
+                
+                key.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    this.style.transform = 'scale(1)';
+                    this.style.opacity = '1';
+                    
+                    if (activeInput) {
+                        if (this.classList.contains('delete')) {
+                            // Handle backspace
+                            activeInput.value = activeInput.value.slice(0, -1);
+                        } else if (this.classList.contains('space')) {
+                            // Handle space
+                            activeInput.value += ' ';
+                        } else if (this.classList.contains('done')) {
+                            // Hide keyboard
+                            hideKeyboard();
+                        } else if (this.classList.contains('shift')) {
+                            // Toggle shift
+                            isShiftActive = !isShiftActive;
+                            this.classList.toggle('active');
+                            updateLetterCase();
+                        } else {
+                            // Add the character
+                            activeInput.value += this.textContent;
+                        }
+                    }
+                }, { passive: false });
+            });
+            
+            // Hide keyboard when clicking outside
+            document.addEventListener('touchstart', function(e) {
+                if (!keyboard.contains(e.target) && 
+                    !e.target.classList.contains('name-input')) {
+                    hideKeyboard();
+                }
+            }, { passive: false });
+        }
+// ... existing code ...
+        </script>
+        <audio autoplay preload loop>
+            <source src="assets/sfx/music.mp3" type="audio/mpeg">
+        </audio>
+        <!-- Add Swiper JS -->
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script>
+            const swiper = new Swiper('.swiper', {
+                // Optional parameters
+                direction: 'horizontal',
+                loop: true,
+                
+                // If you want pagination
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                
+                // Navigation arrows
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                }
+            });
+        </script>
+    </body>
 </html>
