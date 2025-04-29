@@ -28,6 +28,16 @@
             background-color: #0a0a1a;
             touch-action: manipulation; /* Prevent browser handling of touch events */
         }
+
+        .game-time-leaderboard-notice {
+                font-size: 15px !important;
+                text-align: center;
+                width: 100%;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #ffffff4d;
+                margin-bottom: -20px;
+            }
+
         /* Mobile-friendly adjustments */
         @media (max-width: 768px) {
             html {
@@ -52,6 +62,8 @@
                 width: 100%;
                 align-items: center;
             }
+
+
             
             .instruction-content {
                 width: 85%;
@@ -416,9 +428,9 @@
             text-align: center;
             margin-bottom: -.5rem;
             font-family: "Russo One", sans-serif;
-            border-bottom: 1px solid #ffffff4d;
+ 
             font-size: .9rem;
-            padding-bottom: 10px;
+
             letter-spacing: 5px;
             text-transform: uppercase;
             font-weight: 400;
@@ -1157,8 +1169,7 @@
         }
         .leaderboard h2 {
             text-align: center;
-            margin-bottom: -.5rem;
-            border-bottom: 1px solid #ffffff4d;
+            margin-bottom: -20px;
             font-size: .9rem;
             padding-bottom: 10px;
             letter-spacing: 5px;
@@ -1407,6 +1418,7 @@
             opacity: 0;
             transition: all 0.5s ease;
             backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             position: relative;
             z-index: 1;
         }
@@ -1648,10 +1660,10 @@
         .swiper {
             width: 100%;
             height: 450px;
-            background: rgba(255, 255, 255, 0.021);
+            background: rgba(255, 255, 255, 0.0);
             border-radius: 10px;
             border: 1px solid #08080800;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.836);
+            box-shadow: 0 0 20px rgba(172, 172, 172, 0.2);
             overflow: hidden;
         }
 
@@ -1946,30 +1958,45 @@
         .input-with-icon .name-input {
             padding-left: 35px;
         }
-
-        .speed-preset-btn.active {
-            background: #ffffff;
-            color: rgb(0, 0, 0);
-        }
-
-        .game-time-btn {
-            padding: 8px 15px;
-            border: 1px solid #e9e9e94d;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
+        
+        .speed-input {
+            background: rgba(10, 10, 26, 0.8);
+            border: 1px solid rgba(77, 153, 211, 0.3);
+            color: white;
+            padding: 5px;
             border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            width: 100%;
+            width: 60px;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
         }
 
-        .game-time-btn:hover {
-            background: rgba(77, 153, 211, 0.2);
+        /* Game time dropdown specific styles */
+        #game-time-select {
+            width: 60px;
+    padding: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
         }
 
-        .game-time-btn.active {
-            background: #ffffff;
-            color: rgb(0, 0, 0);
+        #game-time-select option {
+            background: rgba(10, 10, 26, 0.95);
+            color: white;
+            padding: 5px;
+        }
+
+        #game-time-select:focus {
+            outline: none;
+            border-color: #4D99D3;
+            box-shadow: 0 0 5px rgba(77, 153, 211, 0.5);
+        }
+
+        #game-time-select:hover {
+            border-color: #4D99D3;
         }
     </style>
 </head>
@@ -2092,10 +2119,16 @@
             </div>
             <div class="settings-option">
                 <span class="settings-option-label">Game Time (seconds)</span>
-                <div class="speed-presets">
-                    <button class="game-time-btn active" onclick="setGameTime(30)">30</button>
-                    <button class="game-time-btn" onclick="setGameTime(20)">20</button>
-                    <button class="game-time-btn" onclick="setGameTime(10)">10</button>
+                <div class="speed-inputs-item">
+                    <div class="speed-input-group">
+                        <select id="game-time-select" class="speed-input">
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="25">25</option>
+                            <option value="30" selected>30</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="settings-option speed-control">
@@ -2126,7 +2159,7 @@
             </div>
 
             <div class="settings-section">
-                <button class="settings-button" onclick="clearLeaderboard()">Clear Leaderboard</button>
+                <button class="settings-button" style="margin-bottom: 0px;" onclick="clearLeaderboard()">Clear Leaderboard</button>
                 <button class="settings-button" onclick="viewAllSubmissions()">View All Submissions</button>
             </div>
             
@@ -2134,6 +2167,7 @@
 
             <div class="leaderboard">
                 <h2>Leaderboard</h2>
+                <p class="game-time-leaderboard-notice">Game Time: 30 Seconds</p>
                 <table class="leaderboard-table">
                     <thead>
                         <tr>
@@ -2247,6 +2281,7 @@
                         <th class="rank">Rank</th>
                         <th>Name</th>
                         <th class="score">Score</th>
+                        <th class="time">Time</th>
                     </tr>
                 </thead>
                 <tbody id="game-over-leaderboard-body">
@@ -2495,21 +2530,31 @@
 
         // Function to set game time
         function setGameTime(seconds) {
-            gameTimeSetting = seconds;
-            
-            // Update active button state
-            const gameTimeButtons = document.querySelectorAll('.game-time-btn');
-            gameTimeButtons.forEach(btn => {
-                if (parseInt(btn.textContent) === seconds) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
+            if (seconds !== gameTimeSetting) {
+                gameTimeSetting = seconds;
+                saveSettings();
+                showNotification(`Game time set to ${seconds} seconds!`, 'rgba(77, 153, 211, 0.9)');
+                
+                // Update game time notice
+                const notice = document.querySelector('.game-time-leaderboard-notice');
+                if (notice) {
+                    notice.textContent = `Game Time: ${seconds} Seconds`;
                 }
-            });
-            
-            saveSettings();
-            showNotification(`Game time set to ${seconds} seconds!`, 'rgba(77, 153, 211, 0.9)');
+                
+                // Update all leaderboards
+                updateLeaderboardDisplay();
+            }
         }
+
+        // Add event listener for the game time dropdown
+        document.addEventListener('DOMContentLoaded', function() {
+            const gameTimeSelect = document.getElementById('game-time-select');
+            if (gameTimeSelect) {
+                gameTimeSelect.addEventListener('change', function() {
+                    setGameTime(parseInt(this.value));
+                });
+            }
+        });
 
         // Array of cybersecurity facts
         const cybersecurityFacts = [
@@ -3034,7 +3079,7 @@
             document.querySelector('.instruction-screen').style.display = 'flex';
             
             // Update instruction text based on mode
-            const instructionText = document.querySelector('.instruction-text');
+            const instructionText = document.getElementById('mode-instruction');
             if (mode === 'attack') {
                 instructionText.textContent = '';
             } else {
@@ -3073,84 +3118,95 @@
                 console.error("Error playing background music:", e);
             }
             
+            // Remove combo reset
+            // currentCombo = 0;
+            // totalBonusPoints = 0;
+            
             // Hide instruction screen
             document.querySelector('.instruction-screen').classList.remove('show');
             document.querySelector('.instruction-content').classList.remove('show');
             
-            // Clear any existing gnats and animations
-            TweenMax.killAll();
-            enemies.innerHTML = '';
-            gnats = [];
-            particles = [];
-            
-            // Remove any hit area indicators
-            removeHitAreaIndicator();
-            removeGnatHighlights();
-            
-            document.querySelector('.game').style.display = 'block';
-            document.querySelector('.game-over-screen').style.display = 'none';
-            
-            if (gameMode === 'attack') {
-                // Attack mode setup
-                document.querySelector('.timer').style.display = 'block';
-                document.querySelector('.counter').style.display = 'block';
-                document.querySelector('.health-bar').style.display = 'none';
-                document.querySelector('.player-circle').style.display = 'none';
-                document.body.style.cursor = 'default';
-            } else {
-                // Survival mode setup
-                document.querySelector('.timer').style.display = 'none';
-                document.querySelector('.counter').style.display = 'none';
-                document.querySelector('.health-bar').style.display = 'block';
-                document.querySelector('.player-circle').style.display = 'block';
-                document.body.style.cursor = 'none';
-            }
-            
-            swatCount = 0;
-            timeLeft = gameTimeSetting;
-            
-            if (gameMode === 'attack') {
-                document.querySelector('.timer-text').textContent = timeLeft;
-                document.querySelector('.timer-circle-progress').style.strokeDashoffset = '0';
+            setTimeout(() => {
+                document.querySelector('.instruction-screen').style.display = 'none';
                 
-                // Start the game timer for attack mode
-                gameTimer = setInterval(function() {
-                    timeLeft--;
-                    document.querySelector('.timer-text').textContent = timeLeft;
-                    var progress = (timeLeft / gameTimeSetting) * 283;
-                    document.querySelector('.timer-circle-progress').style.strokeDashoffset = (283 - progress) + 'px';
-                    
-                    if (timeLeft <= 5) {
-                        document.querySelector('.timer-circle-progress').style.stroke = '#ff4444';
-                        document.querySelector('.timer-text').style.color = '#ff4444';
-                        document.querySelector('.game.animated-container').classList.add('ending-animation');
-                    }
-                    
-                    if (timeLeft <= 0) {
-                        document.querySelector('.game.animated-container').classList.remove('ending-animation');
-                        clearInterval(gameTimer);
-                        endGame();
-                    }
-                }, 1000);
-            }
+                // Clear any existing gnats and animations
+                TweenMax.killAll();
+                enemies.innerHTML = '';
+                gnats = [];
+                particles = [];
+                
+                // Remove any hit area indicators
+                removeHitAreaIndicator();
+                removeGnatHighlights();
+                
+                document.querySelector('.game').style.display = 'block';
+                document.querySelector('.game-over-screen').style.display = 'none';
+                
+                if (gameMode === 'attack') {
+                    // Attack mode setup
+                    document.querySelector('.timer').style.display = 'block';
+                    document.querySelector('.counter').style.display = 'block';
+                    document.querySelector('.health-bar').style.display = 'none';
+                    document.querySelector('.player-circle').style.display = 'none';
+                    document.body.style.cursor = 'default';
+                    // Show combo indicator in attack mode
+                    // comboIndicator.style.display = 'block';
+                } else {
+                    // Survival mode setup
+                    document.querySelector('.timer').style.display = 'none';
+                    document.querySelector('.counter').style.display = 'none';
+                    document.querySelector('.health-bar').style.display = 'block';
+                    document.querySelector('.player-circle').style.display = 'block';
+                    document.body.style.cursor = 'none';
+                    // Hide combo indicator in survival mode
+                    // comboIndicator.style.display = 'none';
+                }
+                
+                swatCount = 0;
+                timeLeft = gameTimeSetting;
+                
+                if (gameMode === 'attack') {
+            document.querySelector('.timer-text').textContent = timeLeft;
+            document.querySelector('.timer-circle-progress').style.strokeDashoffset = '0';
             
-            // Update score display
-            updateScore();
-            
-            // Start emitting gnats immediately
-            createGnats(3); // Create initial batch of gnats
-            emitGnats(); // Start the continuous spawning
-            
-            // Start data stream effect
-            setInterval(createDataStream, 2000);
-            
-            // Start periodic cleanup
-            setInterval(cleanupOrphanedGnats, 100);
-            
-            // Start debug features if enabled
-            if (debugMode) {
-                requestAnimationFrame(updateGnatHighlights);
-            }
+                    // Start the game timer for attack mode
+            gameTimer = setInterval(function() {
+                timeLeft--;
+                document.querySelector('.timer-text').textContent = timeLeft;
+                        var progress = (timeLeft / gameTimeSetting) * 283;
+                document.querySelector('.timer-circle-progress').style.strokeDashoffset = (283 - progress) + 'px';
+                        
+                        if (timeLeft <= 5) {
+                            document.querySelector('.timer-circle-progress').style.stroke = '#ff4444';
+                            document.querySelector('.timer-text').style.color = '#ff4444';
+                            document.querySelector('.game.animated-container').classList.add('ending-animation');
+                        }
+                
+                if (timeLeft <= 0) {
+                    document.querySelector('.game.animated-container').classList.remove('ending-animation');
+                    clearInterval(gameTimer);
+                    endGame();
+                }
+            }, 1000);
+                }
+                
+                // Update score display
+                updateScore();
+
+            // Start emitting gnats
+            emitGnats();
+                
+                // Start data stream effect
+                setInterval(createDataStream, 2000);
+                
+                // Start periodic cleanup
+                setInterval(cleanupOrphanedGnats, 100);
+                
+                // Start debug features if enabled
+                if (debugMode) {
+                    requestAnimationFrame(updateGnatHighlights);
+                }
+            }, 500);
         }
 
         function endGame() {
@@ -3223,8 +3279,9 @@
             
             leaderboardBody.innerHTML = '';
             
-            // Sort high scores in descending order
-            const sortedScores = [...highScores].sort((a, b) => b.score - a.score);
+            // Filter and sort high scores by current game time setting
+            const filteredScores = highScores.filter(score => score.gameTime === gameTimeSetting);
+            const sortedScores = filteredScores.sort((a, b) => b.score - a.score);
             
             // Display top 10 scores
             sortedScores.slice(0, 10).forEach((score, index) => {
@@ -3254,7 +3311,8 @@
                     name: name,
                     email: email,
                     score: swatCount,
-                    date: new Date().toLocaleDateString()
+                    date: new Date().toLocaleDateString(),
+                    gameTime: gameTimeSetting
                 };
                 
                 // Add score with animation
@@ -3264,6 +3322,7 @@
                     <span class="score-name">${name}</span>
                     <span class="score-value">${swatCount}</span>
                     <span class="score-date">${score.date}</span>
+                    <span class="score-time">${score.gameTime}s</span>
                 `;
                 
                 // Animate the score entry
@@ -3274,14 +3333,24 @@
                 });
                 
                 // Save to localStorage
-                highScores.push(score);
+                highScores.push({
+                    name: score.name,
+                    score: score.score,
+                    date: new Date().toISOString(),
+                    gameTime: score.gameTime
+                });
                 highScores.sort((a, b) => b.score - a.score);
                 highScores = highScores.slice(0, 10);
                 localStorage.setItem('databreachDefenderHighScores', JSON.stringify(highScores));
                 
                 // Save to a separate list for all submissions
                 var allSubmissions = JSON.parse(localStorage.getItem('databreachDefenderSubmissions') || '[]');
-                allSubmissions.push(score);
+                allSubmissions.push({
+                    name: score.name,
+                    score: score.score,
+                    date: new Date().toISOString(),
+                    gameTime: score.gameTime
+                });
                 localStorage.setItem('databreachDefenderSubmissions', JSON.stringify(allSubmissions));
                 
                 updateLeaderboardDisplay();
@@ -4355,11 +4424,6 @@
                 return;
             }
 
-            // Create a formatted string of all submissions
-            var submissionText = submissions.map((sub, index) => {
-                return `${index + 1}. Name: ${sub.name}\n   Email: ${sub.email}\n   Score: ${sub.score}\n   Date: ${sub.date}\n`;
-            }).join('\n');
-
             // Create modal backdrop
             var backdrop = document.createElement('div');
             backdrop.style.cssText = `
@@ -4383,7 +4447,7 @@
                 background: rgba(10, 10, 26, 0.95);
                 padding: 20px;
                 border-radius: 10px;
-                max-width: 80%;
+                max-width: 90%;
                 max-height: 80vh;
                 overflow-y: auto;
                 z-index: 9999;
@@ -4392,13 +4456,60 @@
                 border: 1px solid rgba(77, 153, 211, 0.3);
             `;
 
-            var content = document.createElement('div');
-            content.style.cssText = `
-                white-space: pre-wrap;
-                font-size: 14px;
-                line-height: 1.5;
+            // Create table
+            var table = document.createElement('table');
+            table.style.cssText = `
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 40px;
+                font-size: 12px;
             `;
-            content.textContent = submissionText;
+
+            // Create table header
+            var thead = document.createElement('thead');
+            thead.innerHTML = `
+                <tr>
+                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(77, 153, 211, 0.3); font-size: 12px;">#</th>
+                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(77, 153, 211, 0.3); font-size: 12px;">Name</th>
+                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(77, 153, 211, 0.3); font-size: 12px;">Email</th>
+                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(77, 153, 211, 0.3); font-size: 12px;">Score</th>
+                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(77, 153, 211, 0.3); font-size: 12px;">Time</th>
+                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid rgba(77, 153, 211, 0.3); font-size: 12px;">Date & Time</th>
+                </tr>
+            `;
+
+            // Create table body
+            var tbody = document.createElement('tbody');
+            submissions.forEach((sub, index) => {
+                var row = document.createElement('tr');
+                row.style.cssText = `
+                    border-bottom: 1px solid rgba(77, 153, 211, 0.1);
+                    font-size: 12px;
+                `;
+                const submissionDate = new Date(sub.date);
+                const formattedDateTime = submissionDate.toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                });
+                
+                row.innerHTML = `
+                    <td style="padding: 8px;">${index + 1}</td>
+                    <td style="padding: 8px;">${sub.name}</td>
+                    <td style="padding: 8px;">${sub.email}</td>
+                    <td style="padding: 8px;">${sub.score}</td>
+                    <td style="padding: 8px;">${sub.gameTime}s</td>
+                    <td style="padding: 8px;">${formattedDateTime}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            table.appendChild(thead);
+            table.appendChild(tbody);
 
             var closeButton = document.createElement('button');
             closeButton.textContent = 'Close';
@@ -4408,47 +4519,61 @@
                 right: 10px;
                 background: #4D99D3;
                 border: none;
-                padding: 5px 10px;
+                padding: 8px 15px;
                 border-radius: 5px;
                 color: white;
                 cursor: pointer;
                 font-family: 'Poppins', sans-serif;
+                font-size: 14px;
             `;
-            closeButton.onclick = () => modal.remove();
+            closeButton.onclick = () => {
+                modal.remove();
+                backdrop.remove();
+            };
 
             var exportButton = document.createElement('button');
             exportButton.textContent = 'Export to CSV';
             exportButton.style.cssText = `
                 position: absolute;
                 top: 10px;
-                right: 80px;
+                right: 100px;
                 background: #4D99D3;
                 border: none;
-                padding: 5px 10px;
+                padding: 8px 15px;
                 border-radius: 5px;
                 color: white;
                 cursor: pointer;
                 font-family: 'Poppins', sans-serif;
+                font-size: 14px;
             `;
             exportButton.onclick = () => {
-                var csv = 'Name,Email,Score,Date\n';
+                var csv = 'Name,Email,Score,Time,Date & Time\n';
                 submissions.forEach(sub => {
-                    csv += `${sub.name},${sub.email},${sub.score},${sub.date}\n`;
+                    const submissionDate = new Date(sub.date);
+                    const formattedDateTime = submissionDate.toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: true
+                    });
+                    csv += `${sub.name},${sub.email},${sub.score},${sub.gameTime},${formattedDateTime}\n`;
                 });
                 var blob = new Blob([csv], { type: 'text/csv' });
                 var url = window.URL.createObjectURL(blob);
                 var a = document.createElement('a');
-                a.setAttribute('hidden', '');
-                a.setAttribute('href', url);
-                a.setAttribute('download', 'databreach_defender_submissions.csv');
-                document.body.appendChild(a);
+                a.href = url;
+                a.download = 'submissions.csv';
                 a.click();
-                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
             };
 
             modal.appendChild(closeButton);
             modal.appendChild(exportButton);
-            modal.appendChild(content);
+            modal.appendChild(table);
+            document.body.appendChild(backdrop);
             document.body.appendChild(modal);
         }
 
@@ -4676,13 +4801,20 @@
                 // Update max gnats input value
                 document.getElementById('max-gnats').value = maxGnats;
                 
-                // Update game time button state
-                document.querySelectorAll('.settings-option:nth-last-child(2) .speed-preset-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                    if (parseInt(btn.textContent) === gameTimeSetting) {
-                        btn.classList.add('active');
-                    }
-                });
+                // Update game time dropdown value
+                const gameTimeSelect = document.getElementById('game-time-select');
+                if (gameTimeSelect) {
+                    gameTimeSelect.value = gameTimeSetting;
+                }
+                
+                // Update game time notice
+                const notice = document.querySelector('.game-time-leaderboard-notice');
+                if (notice) {
+                    notice.textContent = `Game Time: ${gameTimeSetting} Seconds`;
+                }
+                
+                // Update leaderboard display
+                updateLeaderboardDisplay();
             }
         }
 
