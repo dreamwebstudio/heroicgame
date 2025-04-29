@@ -1407,7 +1407,6 @@
             opacity: 0;
             transition: all 0.5s ease;
             backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             position: relative;
             z-index: 1;
         }
@@ -1649,10 +1648,10 @@
         .swiper {
             width: 100%;
             height: 450px;
-            background: rgba(255, 255, 255, 0.0);
+            background: rgba(255, 255, 255, 0.021);
             border-radius: 10px;
             border: 1px solid #08080800;
-            box-shadow: 0 0 20px rgba(172, 172, 172, 0.2);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.836);
             overflow: hidden;
         }
 
@@ -1947,6 +1946,31 @@
         .input-with-icon .name-input {
             padding-left: 35px;
         }
+
+        .speed-preset-btn.active {
+            background: #ffffff;
+            color: rgb(0, 0, 0);
+        }
+
+        .game-time-btn {
+            padding: 8px 15px;
+            border: 1px solid #e9e9e94d;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .game-time-btn:hover {
+            background: rgba(77, 153, 211, 0.2);
+        }
+
+        .game-time-btn.active {
+            background: #ffffff;
+            color: rgb(0, 0, 0);
+        }
     </style>
 </head>
 <body>
@@ -2066,6 +2090,14 @@
                     </div>
                 </div>
             </div>
+            <div class="settings-option">
+                <span class="settings-option-label">Game Time (seconds)</span>
+                <div class="speed-presets">
+                    <button class="game-time-btn active" onclick="setGameTime(30)">30</button>
+                    <button class="game-time-btn" onclick="setGameTime(20)">20</button>
+                    <button class="game-time-btn" onclick="setGameTime(10)">10</button>
+                </div>
+            </div>
             <div class="settings-option speed-control">
                 <span class="settings-option-label">Item Speeds (seconds)</span>
                 <div class="speed-presets">
@@ -2094,7 +2126,6 @@
             </div>
 
             <div class="settings-section">
-                <h3>Leaderboard</h3>
                 <button class="settings-button" onclick="clearLeaderboard()">Clear Leaderboard</button>
                 <button class="settings-button" onclick="viewAllSubmissions()">View All Submissions</button>
             </div>
@@ -2447,6 +2478,7 @@
         var swatCount = 0;
         var gameTimer;
         var timeLeft = 30;
+        var gameTimeSetting = 30; // Default game time
         var highScores = JSON.parse(localStorage.getItem('databreachDefenderHighScores')) || [];
         var particles = [];
         var lastTapTime = 0;
@@ -2460,6 +2492,24 @@
         var mouseHitboxIndicator = null; // For showing mouse hitbox
         var mouseHitboxInterval = null; // For managing mouse hitbox updates
         var lastHighlightUpdate = 0; // For throttling highlight updates
+
+        // Function to set game time
+        function setGameTime(seconds) {
+            gameTimeSetting = seconds;
+            
+            // Update active button state
+            const gameTimeButtons = document.querySelectorAll('.game-time-btn');
+            gameTimeButtons.forEach(btn => {
+                if (parseInt(btn.textContent) === seconds) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            
+            saveSettings();
+            showNotification(`Game time set to ${seconds} seconds!`, 'rgba(77, 153, 211, 0.9)');
+        }
 
         // Array of cybersecurity facts
         const cybersecurityFacts = [
@@ -2984,7 +3034,7 @@
             document.querySelector('.instruction-screen').style.display = 'flex';
             
             // Update instruction text based on mode
-            const instructionText = document.getElementById('mode-instruction');
+            const instructionText = document.querySelector('.instruction-text');
             if (mode === 'attack') {
                 instructionText.textContent = '';
             } else {
@@ -3023,95 +3073,84 @@
                 console.error("Error playing background music:", e);
             }
             
-            // Remove combo reset
-            // currentCombo = 0;
-            // totalBonusPoints = 0;
-            
             // Hide instruction screen
             document.querySelector('.instruction-screen').classList.remove('show');
             document.querySelector('.instruction-content').classList.remove('show');
             
-            setTimeout(() => {
-                document.querySelector('.instruction-screen').style.display = 'none';
-                
-                // Clear any existing gnats and animations
-                TweenMax.killAll();
-                enemies.innerHTML = '';
-                gnats = [];
-                particles = [];
-                
-                // Remove any hit area indicators
-                removeHitAreaIndicator();
-                removeGnatHighlights();
-                
-                document.querySelector('.game').style.display = 'block';
-                document.querySelector('.game-over-screen').style.display = 'none';
-                
-                if (gameMode === 'attack') {
-                    // Attack mode setup
-                    document.querySelector('.timer').style.display = 'block';
-                    document.querySelector('.counter').style.display = 'block';
-                    document.querySelector('.health-bar').style.display = 'none';
-                    document.querySelector('.player-circle').style.display = 'none';
-                    document.body.style.cursor = 'default';
-                    // Show combo indicator in attack mode
-                    // comboIndicator.style.display = 'block';
-                } else {
-                    // Survival mode setup
-                    document.querySelector('.timer').style.display = 'none';
-                    document.querySelector('.counter').style.display = 'none';
-                    document.querySelector('.health-bar').style.display = 'block';
-                    document.querySelector('.player-circle').style.display = 'block';
-                    document.body.style.cursor = 'none';
-                    // Hide combo indicator in survival mode
-                    // comboIndicator.style.display = 'none';
-                }
-                
-                swatCount = 0;
-                timeLeft = 30;
-                
-                if (gameMode === 'attack') {
-            document.querySelector('.timer-text').textContent = timeLeft;
-            document.querySelector('.timer-circle-progress').style.strokeDashoffset = '0';
+            // Clear any existing gnats and animations
+            TweenMax.killAll();
+            enemies.innerHTML = '';
+            gnats = [];
+            particles = [];
             
-                    // Start the game timer for attack mode
-            gameTimer = setInterval(function() {
-                timeLeft--;
+            // Remove any hit area indicators
+            removeHitAreaIndicator();
+            removeGnatHighlights();
+            
+            document.querySelector('.game').style.display = 'block';
+            document.querySelector('.game-over-screen').style.display = 'none';
+            
+            if (gameMode === 'attack') {
+                // Attack mode setup
+                document.querySelector('.timer').style.display = 'block';
+                document.querySelector('.counter').style.display = 'block';
+                document.querySelector('.health-bar').style.display = 'none';
+                document.querySelector('.player-circle').style.display = 'none';
+                document.body.style.cursor = 'default';
+            } else {
+                // Survival mode setup
+                document.querySelector('.timer').style.display = 'none';
+                document.querySelector('.counter').style.display = 'none';
+                document.querySelector('.health-bar').style.display = 'block';
+                document.querySelector('.player-circle').style.display = 'block';
+                document.body.style.cursor = 'none';
+            }
+            
+            swatCount = 0;
+            timeLeft = gameTimeSetting;
+            
+            if (gameMode === 'attack') {
                 document.querySelector('.timer-text').textContent = timeLeft;
-                var progress = (timeLeft / 30) * 283;
-                document.querySelector('.timer-circle-progress').style.strokeDashoffset = (283 - progress) + 'px';
-                        
-                        if (timeLeft <= 5) {
-                            document.querySelector('.timer-circle-progress').style.stroke = '#ff4444';
-                            document.querySelector('.timer-text').style.color = '#ff4444';
-                            document.querySelector('.game.animated-container').classList.add('ending-animation');
-                        }
+                document.querySelector('.timer-circle-progress').style.strokeDashoffset = '0';
                 
-                if (timeLeft <= 0) {
-                    document.querySelector('.game.animated-container').classList.remove('ending-animation');
-                    clearInterval(gameTimer);
-                    endGame();
-                }
-            }, 1000);
-                }
-                
-                // Update score display
-                updateScore();
-
-            // Start emitting gnats
-            emitGnats();
-                
-                // Start data stream effect
-                setInterval(createDataStream, 2000);
-                
-                // Start periodic cleanup
-                setInterval(cleanupOrphanedGnats, 100);
-                
-                // Start debug features if enabled
-                if (debugMode) {
-                    requestAnimationFrame(updateGnatHighlights);
-                }
-            }, 500);
+                // Start the game timer for attack mode
+                gameTimer = setInterval(function() {
+                    timeLeft--;
+                    document.querySelector('.timer-text').textContent = timeLeft;
+                    var progress = (timeLeft / gameTimeSetting) * 283;
+                    document.querySelector('.timer-circle-progress').style.strokeDashoffset = (283 - progress) + 'px';
+                    
+                    if (timeLeft <= 5) {
+                        document.querySelector('.timer-circle-progress').style.stroke = '#ff4444';
+                        document.querySelector('.timer-text').style.color = '#ff4444';
+                        document.querySelector('.game.animated-container').classList.add('ending-animation');
+                    }
+                    
+                    if (timeLeft <= 0) {
+                        document.querySelector('.game.animated-container').classList.remove('ending-animation');
+                        clearInterval(gameTimer);
+                        endGame();
+                    }
+                }, 1000);
+            }
+            
+            // Update score display
+            updateScore();
+            
+            // Start emitting gnats immediately
+            createGnats(3); // Create initial batch of gnats
+            emitGnats(); // Start the continuous spawning
+            
+            // Start data stream effect
+            setInterval(createDataStream, 2000);
+            
+            // Start periodic cleanup
+            setInterval(cleanupOrphanedGnats, 100);
+            
+            // Start debug features if enabled
+            if (debugMode) {
+                requestAnimationFrame(updateGnatHighlights);
+            }
         }
 
         function endGame() {
@@ -4129,7 +4168,7 @@
                 }
                 
                 swatCount = 0;
-                timeLeft = 30;
+                timeLeft = gameTimeSetting;
                 
                 if (gameMode === 'attack') {
                     document.querySelector('.timer-text').textContent = timeLeft;
@@ -4139,7 +4178,7 @@
                     gameTimer = setInterval(function() {
                         timeLeft--;
                         document.querySelector('.timer-text').textContent = timeLeft;
-                        var progress = (timeLeft / 30) * 283;
+                        var progress = (timeLeft / gameTimeSetting) * 283;
                         document.querySelector('.timer-circle-progress').style.strokeDashoffset = (283 - progress) + 'px';
                         
                         if (timeLeft <= 5) {
@@ -4605,7 +4644,8 @@
                 showTempGameOverButton: showTempGameOverButton,
                 showSurvivalMode: showSurvivalMode,
                 gnatSpeeds: gnatSpeeds,
-                maxGnats: maxGnats
+                maxGnats: maxGnats,
+                gameTimeSetting: gameTimeSetting
             };
             localStorage.setItem('databreachDefenderSettings', JSON.stringify(settings));
         }
@@ -4622,6 +4662,7 @@
                 showSurvivalMode = settings.showSurvivalMode;
                 gnatSpeeds = settings.gnatSpeeds;
                 maxGnats = settings.maxGnats || 30; // Default to 30 if not set
+                gameTimeSetting = settings.gameTimeSetting || 30; // Default to 30 if not set
 
                 // Update UI to reflect loaded settings
                 updateDebugToggleState();
@@ -4634,6 +4675,14 @@
                 
                 // Update max gnats input value
                 document.getElementById('max-gnats').value = maxGnats;
+                
+                // Update game time button state
+                document.querySelectorAll('.settings-option:nth-last-child(2) .speed-preset-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (parseInt(btn.textContent) === gameTimeSetting) {
+                        btn.classList.add('active');
+                    }
+                });
             }
         }
 
